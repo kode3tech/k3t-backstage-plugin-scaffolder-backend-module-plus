@@ -1,0 +1,10 @@
+migrations :
+  ✔ catalog-query.ts (catalog:query)                    -> catalog-queries.ts (catalog:query:plus) @done(24-02-28 23:54)
+  ✔ catalog-register-each.ts (catalog:register:each)    -> catalog-registers.ts (catalog:register:plus) @done(24-02-28 23:54)
+  ✔ fetch-each.ts (fetch:template:each)                 -> @done(24-02-29 00:04)
+  ✔ fetch-plain-each.ts (fetch:plain:each)              -> fetch-plains.ts (fetch:plain:plus) @done(24-02-29 00:17)
+  ✔ fetch-plain-file-each.ts (fetch:plain:file:plus)
+  ✔ fetch-template-each-v2.ts (fetch:template:each-v2)  -> fetch-templates.ts (fetch:template:plus) @done(24-02-29 00:19)
+  ✔ relation-fetch.ts (relation:fetch)                  -> fetch-relations.ts (catalog:relation:plus) @done(24-02-29 00:17)
+  ✔ repoUrl-parse.ts (repourl:parse)                    -> parse-repoUrls.ts (parse:repourls) @done(24-02-29 00:57)
+  ☐ parse-entity-refs.ts (parse:entityrefs)
