@@ -1,7 +1,7 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { JsonObject } from '@backstage/types';
 import { Schema } from 'jsonschema';
-import { DEBUG_FS_READ, PARSE_REPO_URL } from './ids';
+import { DEBUG_FS_READ } from './ids';
 import { examples } from "./parse-repo-url.examples";
 import { Logger } from 'winston';
 import { readFileSync } from "node:fs";
