@@ -2,7 +2,7 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { JsonObject } from '@backstage/types';
 import { Schema } from 'jsonschema';
-import { DEBUG_FS_READ } from './ids';
+import { GLOB } from './ids';
 import { examples } from "./parse-repo-url.examples";
 import globby from 'globby';
 
@@ -185,7 +185,7 @@ export const OutputSchema: Schema = {
 export function createGlobAction() {
 
   return createTemplateAction<InputType, OutputType>({
-    id: DEBUG_FS_READ,
+    id: GLOB,
     description: 'Read file(s) and display',
     examples,
     schema: {

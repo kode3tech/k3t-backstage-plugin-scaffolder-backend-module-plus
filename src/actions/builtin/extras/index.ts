@@ -15,4 +15,8 @@
  */
 
 export { createParseRepoUrlAction } from './parse-repo-url';
-// export { createPlusFetchCatalogEntityAction } from './fetch';
+export { createDebugFsReadAction } from './debug-fs-read';
+export { createGlobAction } from './glob';
+export { createRegexFsReplaceAction } from './regex-fs-replace';
+export { createUuidV4GenAction } from './uuid';
+export { createVarsAction } from './vars';

@@ -6,7 +6,7 @@ import { VARS } from './ids';
 
 export const examples: TemplateExample[] = [
   {
-    description: 'Proxy vars',
+    description: 'Proxy vars to reuse on next actions',
     example: yaml.stringify({
       steps: [
         {
@@ -14,8 +14,8 @@ export const examples: TemplateExample[] = [
           id: 'reusable-vars',
           name: 'Proxy vars',
           input: {
-            foo: 'bar',
-            bar: 'baaaar'
+            foo: 'my-prefixed-${{ parameters.name | lower }}-foo',
+            bar: 'bar-${{ parameters.value | lower }}'
           } as InputType,
         },
       ],

@@ -22,7 +22,18 @@ import {
 
 import {
   createParseRepoUrlAction,
+  createDebugFsReadAction,
+  createGlobAction,
+  createRegexFsReplaceAction,
+  createUuidV4GenAction,
+  createVarsAction,
 } from './extras';
+
+import {
+  createZipDecompressAction,
+} from './zip';
+
+import { Logger } from 'winston';
 
 
 /**
@@ -30,6 +41,7 @@ import {
  * @public
  */
 export interface CreatePlusActionsOptions {
+  logger: Logger;
   /**
    * The {@link @backstage/backend-common#UrlReader} interface that will be used in the default actions.
    */
@@ -74,7 +86,14 @@ export const createPlusActions = (
     createCatalogQueryAction(options),
 
     createParseRepoUrlAction(options),
- ];
+    createDebugFsReadAction(options),
+    createGlobAction(),
+    createRegexFsReplaceAction(),
+    createUuidV4GenAction(),
+    createVarsAction(),
+    
+    createZipDecompressAction(options),
+];
 
   return actions as TemplateAction<any, any>[];
 };
