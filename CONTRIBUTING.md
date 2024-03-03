@@ -2,7 +2,7 @@
 ## Fast Development
 
 ```sh
-gigit submodule add git@github.com:kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus.git plugins/scaffolder-backend-module-plus
+git submodule add git@github.com:kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus.git plugins/scaffolder-backend-module-plus
 ```
 
 
