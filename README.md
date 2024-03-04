@@ -1,10 +1,10 @@
-# @k3tech/backstage-plugin-scaffolder-backend-module-plus
+# Plugin for scaffolder backend plus
 
-The plus module for [@backstage/plugin-scaffolder-backend](https://www.npmjs.com/package/@backstage/plugin-scaffolder-backend).
+The `plus` module for [scaffolder-backend](https://www.npmjs.com/package/@backstage/plugin-scaffolder-backend).
 
-This package make you able to execute multiples parameters with an single call.
+This package make you able to execute `multiples` parameters with an single call and `extra` features.
 
-_This plugin was created through the Backstage CLI_
+> You can see all available examples [here](./exemples.md).
 
 ## Get Started
 
@@ -54,3 +54,5 @@ export default async function createPlugin(
   });
 
 ```
+
+_This plugin was created through the Backstage CLI_
