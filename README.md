@@ -1,4 +1,4 @@
-# Plugin for scaffolder backend plus
+# Plugin for scaffolder backend `plus`
 
 The `plus` module for [scaffolder-backend](https://www.npmjs.com/package/@backstage/plugin-scaffolder-backend).
 
