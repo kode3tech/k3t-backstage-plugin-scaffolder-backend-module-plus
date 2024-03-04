@@ -166,6 +166,28 @@ steps:
 
 ```
 
+### Rename specified files 
+
+```yaml
+steps:
+  - action: fs:rename:plus
+    id: renameFiles
+    name: Rename files
+    input:
+      commonParams:
+        overwrite: true
+      files:
+        - from: file1.txt
+          to: file1Renamed.txt
+          overwrite: false
+        - from: file2.txt
+          to: file2Renamed.txt
+          overwrite: false
+        - from: file3.txt
+          to: file3Renamed.txt
+
+```
+
 ### Downloads content and places it in the workspace.
 
 ```yaml
@@ -256,28 +278,6 @@ steps:
           targetPath: ./target-main
         - url: ./skeleton/optional
           targetPath: ./target-optional
-
-```
-
-### Rename specified files 
-
-```yaml
-steps:
-  - action: fs:rename:plus
-    id: renameFiles
-    name: Rename files
-    input:
-      commonParams:
-        overwrite: true
-      files:
-        - from: file1.txt
-          to: file1Renamed.txt
-          overwrite: false
-        - from: file2.txt
-          to: file2Renamed.txt
-          overwrite: false
-        - from: file3.txt
-          to: file3Renamed.txt
 
 ```
 
