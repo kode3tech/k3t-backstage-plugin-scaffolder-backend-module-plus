@@ -8,6 +8,16 @@ import { writeFileSync } from 'node:fs'
   const lines = []
   for (const file of files) {
     const { examples }: {examples: TemplateExample[]} = await import(path.resolve(file));
+    const action = /action: (.+)/gm.exec(examples[0].example)
+
+    if(action && action[1]){
+      lines.push(...[
+        ``,
+        `## ${action[1]}`,
+        ``
+      ])
+    }
+
     for (const example of examples) {
       lines.push(...[
         `### ${example.description}`,

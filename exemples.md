@@ -1,3 +1,6 @@
+
+## catalog:query:plus
+
 ### Query in catalog
 
 ```yaml
@@ -15,6 +18,9 @@ steps:
             relations.dependsOn: ${{ parameters.component_ref }}
 
 ```
+
+
+## catalog:register:plus
 
 ### Register with the catalog
 
@@ -46,6 +52,9 @@ steps:
 
 ```
 
+
+## catalog:relation:plus
+
 ### Query in relations
 
 ```yaml
@@ -65,6 +74,34 @@ steps:
 
 ```
 
+
+## fs:rename:plus
+
+### Rename specified files 
+
+```yaml
+steps:
+  - action: fs:rename:plus
+    id: renameFiles
+    name: Rename files
+    input:
+      commonParams:
+        overwrite: true
+      files:
+        - from: file1.txt
+          to: file1Renamed.txt
+          overwrite: false
+        - from: file2.txt
+          to: file2Renamed.txt
+          overwrite: false
+        - from: file3.txt
+          to: file3Renamed.txt
+
+```
+
+
+## debug:fs:read:plus
+
 ### Debug read files in log stream
 
 ```yaml
@@ -80,6 +117,9 @@ steps:
 
 ```
 
+
+## glob:plus
+
 ### Find files from Glob expressions
 
 ```yaml
@@ -93,6 +133,9 @@ steps:
 
 ```
 
+
+## parse:repo-url:plus
+
 ### Parse Repo Url like "host?owner=any&organization=any&workspace=any&project=any"
 
 ```yaml
@@ -105,6 +148,9 @@ steps:
         - host?owner=any&organization=any&workspace=any&project=any
 
 ```
+
+
+## regex:fs:replace:plus
 
 ### Replace in files using Regex and Glob
 
@@ -141,6 +187,9 @@ steps:
 
 ```
 
+
+## uuid:v4:gen:plus
+
 ### Generate 3 UUID's
 
 ```yaml
@@ -152,6 +201,9 @@ steps:
       amount: 3
 
 ```
+
+
+## vars:plus
 
 ### Proxy vars to reuse on next actions
 
@@ -166,27 +218,8 @@ steps:
 
 ```
 
-### Rename specified files 
 
-```yaml
-steps:
-  - action: fs:rename:plus
-    id: renameFiles
-    name: Rename files
-    input:
-      commonParams:
-        overwrite: true
-      files:
-        - from: file1.txt
-          to: file1Renamed.txt
-          overwrite: false
-        - from: file2.txt
-          to: file2Renamed.txt
-          overwrite: false
-        - from: file3.txt
-          to: file3Renamed.txt
-
-```
+## fetch:plain:plus
 
 ### Downloads content and places it in the workspace.
 
@@ -217,6 +250,9 @@ steps:
 
 ```
 
+
+## fetch:plain:file:plus
+
 ### Downloads multiple files and places it in the workspace.
 
 ```yaml
@@ -232,6 +268,9 @@ steps:
         - targetPath: target-optional
 
 ```
+
+
+## fetch:template:plus
 
 ### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
 
@@ -280,6 +319,9 @@ steps:
           targetPath: ./target-optional
 
 ```
+
+
+## zip:decompress:plus
 
 ### Decompress multiple files from same encoding type.
 
