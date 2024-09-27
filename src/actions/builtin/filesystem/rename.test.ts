@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { resolve as resolvePath } from 'path';
-import { createFilesystemRenamePlusAction } from './rename';
-import { getVoidLogger } from '@backstage/backend-common';
-import { PassThrough } from 'stream';
-import fs from 'fs-extra';
 import { createMockDirectory } from '@backstage/backend-test-utils';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
+import fs from 'fs-extra';
+import { resolve as resolvePath } from 'path';
+import { PassThrough } from 'stream';
 import { FS_RENAME_PLURI_ID } from './ids';
+import { createFilesystemRenamePlusAction } from './rename';
 
 describe(`${FS_RENAME_PLURI_ID}`, () => {
   const action = createFilesystemRenamePlusAction();
@@ -42,12 +42,14 @@ describe(`${FS_RENAME_PLURI_ID}`, () => {
       to: 'brand-new-folder',
     },
   ];
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
     input: {
       files: mockInputFiles,
     },
     workspacePath,
-    logger: getVoidLogger(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    logger: {} as any,
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

@@ -10,6 +10,7 @@ import { Entity } from '@backstage/catalog-model';
 import { examples } from './register.examples';
 import yaml from 'yaml';
 import { CATALOG_REGISTER_ID } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${CATALOG_REGISTER_ID} examples`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -30,7 +31,10 @@ describe(`${CATALOG_REGISTER_ID} examples`, () => {
     catalogClient: catalogClient as unknown as CatalogApi,
   });
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

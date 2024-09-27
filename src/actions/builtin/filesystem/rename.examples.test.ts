@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { resolve as resolvePath } from 'path';
-import { createFilesystemRenamePlusAction } from './rename';
-import { getVoidLogger } from '@backstage/backend-common';
-import { PassThrough } from 'stream';
-import fs from 'fs-extra';
-import yaml from 'yaml';
-import { examples } from './rename.examples';
 import { createMockDirectory } from '@backstage/backend-test-utils';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
+import fs from 'fs-extra';
+import { resolve as resolvePath } from 'path';
+import { PassThrough } from 'stream';
+import yaml from 'yaml';
 import { FS_RENAME_PLURI_ID } from './ids';
+import { createFilesystemRenamePlusAction } from './rename';
+import { examples } from './rename.examples';
 
 describe(`${FS_RENAME_PLURI_ID} examples`, () => {
   const action = createFilesystemRenamePlusAction();
@@ -32,16 +32,19 @@ describe(`${FS_RENAME_PLURI_ID} examples`, () => {
   const mockDir = createMockDirectory();
   const workspacePath = resolvePath(mockDir.path, 'workspace');
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
     input: {
       files: files,
     },
     workspacePath,
-    logger: getVoidLogger(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    logger: {} as any,
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
+
 
   beforeEach(() => {
     jest.restoreAllMocks();
@@ -60,7 +63,7 @@ describe(`${FS_RENAME_PLURI_ID} examples`, () => {
   });
 
   it('should call fs.move with the correct values', async () => {
-    mockContext.input.files.forEach(file => {
+    mockContext.input.files.forEach((file: { from: string; }) => {
       const filePath = resolvePath(workspacePath, file.from);
       const fileExists = fs.existsSync(filePath);
       expect(fileExists).toBe(true);
@@ -68,7 +71,7 @@ describe(`${FS_RENAME_PLURI_ID} examples`, () => {
 
     await action.handler(mockContext);
 
-    mockContext.input.files.forEach(file => {
+    mockContext.input.files.forEach((file: { from: string; }) => {
       const filePath = resolvePath(workspacePath, file.from);
       const fileExists = fs.existsSync(filePath);
       expect(fileExists).toBe(false);

@@ -19,6 +19,7 @@ import os from 'os';
 import { PassThrough } from 'stream';
 import { createRegexFsReplaceAction } from './regex-fs-replace';
 import { REGEX_FS_REPLACE } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${REGEX_FS_REPLACE}`, () => {
 
@@ -32,7 +33,10 @@ describe(`${REGEX_FS_REPLACE}`, () => {
 
   const action = createRegexFsReplaceAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

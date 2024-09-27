@@ -7,12 +7,16 @@ import yaml from 'yaml';
 import { createRegexFsReplaceAction } from './regex-fs-replace';
 import { examples } from './regex-fs-replace.examples';
 import { REGEX_FS_REPLACE } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${REGEX_FS_REPLACE} examples`, () => {
   const addLocation = jest.fn();
   const action = createRegexFsReplaceAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

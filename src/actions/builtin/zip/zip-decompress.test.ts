@@ -6,14 +6,15 @@ jest.mock('@backstage/plugin-scaffolder-node', () => {
 
 import os from 'os';
 import { resolve as resolvePath } from 'path';
-import { getVoidLogger } from '@backstage/backend-common';
+
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
-import { fetchFile } from '@backstage/plugin-scaffolder-node';
+import { ActionContext, fetchFile } from '@backstage/plugin-scaffolder-node';
 import { createZipDecompressAction } from './zip-decompress';
 import { PassThrough } from 'stream';
 import { ZIP_DECOMPRESS } from './ids';
 import { UrlReaderService } from '@backstage/backend-plugin-api';
+// import { mockServices } from '@backstage/backend-test-utils';
 
 describe(`${ZIP_DECOMPRESS}`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -34,9 +35,12 @@ describe(`${ZIP_DECOMPRESS}`, () => {
   });
 
   const action = createZipDecompressAction({ integrations, reader });
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
+    input: {} as any,
+    checkpoint: {} as any,
+    getInitiatorCredentials: {} as any,
+    logger: {} as any,
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
@@ -83,3 +87,4 @@ describe(`${ZIP_DECOMPRESS}`, () => {
     );
   });
 });
+

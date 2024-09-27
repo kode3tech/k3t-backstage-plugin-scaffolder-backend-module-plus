@@ -19,6 +19,7 @@ import os from 'os';
 import { PassThrough } from 'stream';
 import { createDebugFsReadAction } from './debug-fs-read';
 import { DEBUG_FS_READ } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${DEBUG_FS_READ}`, () => {
 
@@ -30,11 +31,12 @@ describe(`${DEBUG_FS_READ}`, () => {
   //   }),
   // );
 
-  const action = createDebugFsReadAction({
-    logger: getVoidLogger(),
-  });
+  const action = createDebugFsReadAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

@@ -9,6 +9,7 @@ import yaml from 'yaml';
 import { PARSE_REPO_URL } from './ids';
 import { createParseRepoUrlAction } from './parse-repo-url';
 import { examples } from './parse-repo-url.examples';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${PARSE_REPO_URL} examples`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -24,7 +25,10 @@ describe(`${PARSE_REPO_URL} examples`, () => {
     integrations
   });
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

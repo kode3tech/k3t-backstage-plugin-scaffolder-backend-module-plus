@@ -7,12 +7,16 @@ import yaml from 'yaml';
 import { createVarsAction } from './vars';
 import { examples } from './vars.examples';
 import { VARS } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${VARS} examples`, () => {
   const addLocation = jest.fn();
   const action = createVarsAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

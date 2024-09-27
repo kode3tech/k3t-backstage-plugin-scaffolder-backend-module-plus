@@ -7,12 +7,16 @@ import yaml from 'yaml';
 import { createGlobAction } from './glob';
 import { examples } from './glob.examples';
 import { GLOB } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${GLOB} examples`, () => {
   const addLocation = jest.fn();
   const action = createGlobAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

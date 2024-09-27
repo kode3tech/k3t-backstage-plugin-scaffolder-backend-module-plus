@@ -23,6 +23,7 @@ import { ScmIntegrations } from '@backstage/integration';
 import { createCatalogRegisterPlusAction } from './register';
 import { Entity } from '@backstage/catalog-model';
 import { CATALOG_REGISTER_ID } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${CATALOG_REGISTER_ID}`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -43,7 +44,10 @@ describe(`${CATALOG_REGISTER_ID}`, () => {
     catalogClient: catalogClient as unknown as CatalogApi,
   });
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

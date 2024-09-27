@@ -10,7 +10,6 @@ import fs from 'fs-extra';
 import {
   getVoidLogger,
   resolvePackagePath,
-  UrlReader,
 } from '@backstage/backend-common';
 import { ScmIntegrations } from '@backstage/integration';
 import { PassThrough } from 'stream';
@@ -24,6 +23,7 @@ import { examples } from './template.examples';
 import yaml from 'yaml';
 import { createMockDirectory } from '@backstage/backend-test-utils';
 import { FETCH_TEMPLATE_ID } from './ids';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
 
 
 type FetchTemplateInput = InputType;
@@ -47,11 +47,13 @@ describe(`${FETCH_TEMPLATE_ID} examples`, () => {
 
   const logger = getVoidLogger();
 
-  const mockContext = (input: any) => ({
+  const mockContext = (input: any): ActionContext<any, any> => ({
     templateInfo: {
       baseUrl: 'base-url',
       entityRef: 'template:default/test-template',
     },
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     input: input,
     output: jest.fn(),
     logStream: new PassThrough(),
@@ -66,7 +68,7 @@ describe(`${FETCH_TEMPLATE_ID} examples`, () => {
   beforeEach(() => {
     mockDir.clear();
     action = createFetchTemplatePlusAction({
-      reader: Symbol('UrlReader') as unknown as UrlReader,
+      reader: Symbol('UrlReader') as unknown as UrlReaderService,
       integrations: Symbol('Integrations') as unknown as ScmIntegrations,
     });
   });

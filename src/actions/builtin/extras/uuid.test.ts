@@ -19,6 +19,7 @@ import os from 'os';
 import { PassThrough } from 'stream';
 import { createUuidV4GenAction } from './uuid';
 import { UUID_V4_GEN } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${UUID_V4_GEN}`, () => {
 
@@ -32,7 +33,10 @@ describe(`${UUID_V4_GEN}`, () => {
 
   const action = createUuidV4GenAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

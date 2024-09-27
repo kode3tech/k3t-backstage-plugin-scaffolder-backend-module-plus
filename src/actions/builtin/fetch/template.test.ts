@@ -19,10 +19,6 @@ jest.mock('@backstage/plugin-scaffolder-node', () => {
   return { ...actual, fetchContents: jest.fn() };
 });
 
-import {
-  UrlReader,
-  getVoidLogger
-} from '@backstage/backend-common';
 import { createMockDirectory } from '@backstage/backend-test-utils';
 import { ScmIntegrations } from '@backstage/integration';
 import {
@@ -36,6 +32,8 @@ import { join as joinPath, sep as pathSep } from 'path';
 import { PassThrough } from 'stream';
 import { InputType, FieldsType, createFetchTemplatePlusAction } from './template';
 import { FETCH_TEMPLATE_ID } from './ids';
+import { getRootLogger } from '@backstage/backend-common';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
 
 type FetchTemplateInput = InputType;
 
@@ -64,9 +62,9 @@ describe(`${FETCH_TEMPLATE_ID}`, () => {
   const mockDir = createMockDirectory();
   const workspacePath = mockDir.resolve('workspace');
 
-  const logger = getVoidLogger();
-
-  const mockContext = (paramsPatch: Partial<FieldsType> = {}) => ({
+  const mockContext = (paramsPatch: Partial<FieldsType> = {}): ActionContext<any, any> => ({
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     templateInfo: {
       baseUrl: 'base-url',
       entityRef: 'template:default/test-template',
@@ -84,19 +82,33 @@ describe(`${FETCH_TEMPLATE_ID}`, () => {
     ]} as InputType,
     output: jest.fn(),
     logStream: new PassThrough(),
-    logger,
+    logger: getRootLogger(),
     workspacePath,
     async createTemporaryDirectory() {
       return fs.mkdtemp(mockDir.resolve('tmp-'));
     },
   });
 
+  // const mockContext: ActionContext<any, any> = {
+  //   input: {
+  //     files: files,
+  //   },
+  //   workspacePath,
+  //   checkpoint: jest.fn(),
+  //   getInitiatorCredentials: jest.fn(),
+  //   logger: {} as any,
+  //   logStream: new PassThrough(),
+  //   output: jest.fn(),
+  //   createTemporaryDirectory: jest.fn(),
+  // };
+
+
   beforeEach(() => {
     mockDir.setContent({
       workspace: {},
     });
     action = createFetchTemplatePlusAction({
-      reader: Symbol('UrlReader') as unknown as UrlReader,
+      reader: Symbol('UrlReader') as unknown as UrlReaderService,
       integrations: Symbol('Integrations') as unknown as ScmIntegrations,
     });
   });

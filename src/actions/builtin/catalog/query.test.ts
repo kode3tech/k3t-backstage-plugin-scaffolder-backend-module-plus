@@ -20,6 +20,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { CatalogApi } from '@backstage/catalog-client';
 import { createCatalogQueryAction } from './query';
 import { CATALOG_QUERY_ID } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${CATALOG_QUERY_ID}`, () => {
 
@@ -32,7 +33,10 @@ describe(`${CATALOG_QUERY_ID}`, () => {
     catalogClient: catalogClient as unknown as CatalogApi,
   });
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

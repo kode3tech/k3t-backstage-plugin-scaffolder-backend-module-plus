@@ -8,6 +8,7 @@ import { Entity } from '@backstage/catalog-model';
 import { examples } from './query.examples';
 import yaml from 'yaml';
 import { CATALOG_QUERY_ID } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${CATALOG_QUERY_ID} examples`, () => {
   const addLocation = jest.fn();
@@ -19,7 +20,10 @@ describe(`${CATALOG_QUERY_ID} examples`, () => {
     catalogClient: catalogClient as unknown as CatalogApi,
   });
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

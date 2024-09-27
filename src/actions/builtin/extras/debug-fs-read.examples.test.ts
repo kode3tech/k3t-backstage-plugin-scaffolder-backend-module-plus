@@ -7,14 +7,16 @@ import yaml from 'yaml';
 import { createDebugFsReadAction } from './debug-fs-read';
 import { examples } from './debug-fs-read.examples';
 import { DEBUG_FS_READ } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${DEBUG_FS_READ} examples`, () => {
   const addLocation = jest.fn();
-  const action = createDebugFsReadAction({
-    logger: getVoidLogger()
-  });
+  const action = createDebugFsReadAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

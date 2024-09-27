@@ -1,13 +1,11 @@
 
-import {
-  UrlReader
-} from '@backstage/backend-common';
 import { ScmIntegrations } from '@backstage/integration';
 import { createFetchTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { Schema } from 'jsonschema';
 import { examples } from './template.examples'
 import { FETCH_TEMPLATE_ID } from './ids';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
 
 
 export type FieldsType = {
@@ -119,7 +117,7 @@ export const OutputSchema: Schema = {
 
 export function createFetchTemplatePlusAction(options: {
   integrations: ScmIntegrations,
-  reader: UrlReader
+  reader: UrlReaderService
 }) {
   const templateAction = createFetchTemplateAction(options)
 

@@ -7,12 +7,16 @@ import yaml from 'yaml';
 import { createUuidV4GenAction } from './uuid';
 import { examples } from './uuid.examples';
 import { UUID_V4_GEN } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${UUID_V4_GEN} examples`, () => {
   const addLocation = jest.fn();
   const action = createUuidV4GenAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

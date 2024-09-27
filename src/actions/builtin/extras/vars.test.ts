@@ -19,6 +19,7 @@ import os from 'os';
 import { PassThrough } from 'stream';
 import { createVarsAction } from './vars';
 import { VARS } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${VARS}`, () => {
 
@@ -32,7 +33,10 @@ describe(`${VARS}`, () => {
 
   const action = createVarsAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

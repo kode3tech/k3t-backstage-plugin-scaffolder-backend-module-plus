@@ -19,6 +19,7 @@ import os from 'os';
 import { PassThrough } from 'stream';
 import { createGlobAction } from './glob';
 import { GLOB } from './ids';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${GLOB}`, () => {
 
@@ -32,7 +33,10 @@ describe(`${GLOB}`, () => {
 
   const action = createGlobAction();
 
-  const mockContext = {
+  const mockContext: ActionContext<any, any> = {
+    input: {},
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),

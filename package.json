@@ -12,11 +12,14 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "pluginId": "scaffolder",
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "repository": {
     "type": "git",
-    "url": "git+http://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus.git"
+    "url": "git+http://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus.git",
+    "directory": "."
   },
   "bugs": {
     "url": "https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/issues"
@@ -38,37 +41,38 @@
   "dependencies": {
     "@backstage/backend-defaults": "^0.5.0",
     "@backstage/backend-plugin-api": "^1.0.0",
-    "@backstage/plugin-scaffolder-node": "^0.4.11",
-    "@backstage/plugin-scaffolder-backend": "^1.25.0"
+    "@backstage/plugin-scaffolder-backend": "^1.25.0",
+    "@backstage/plugin-scaffolder-node": "^0.4.11"
   },
   "devDependencies": {
-    "@types/fs-extra": "11.0.4",
-    "@backstage/cli": "0.27.0",
     "@backstage/backend-test-utils": "0.5.1",
-    "standard-version": "9.5.0",
-    "@types/uuid": "9.0.0",
+    "@backstage/cli": "0.27.0",
+    "@backstage/test-utils": "^1.6.0",
     "@types/decompress": "^4.2.4",
+    "@types/fs-extra": "11.0.4",
+    "@types/uuid": "9.0.0",
+    "standard-version": "9.5.0",
     "ts-node": "10.9.2"
   },
   "peerDependencies": {
-    "@backstage/errors": "^1.2.4",
     "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-plugin-api": "^1.0.0",
     "@backstage/catalog-client": "^1.7.0",
     "@backstage/catalog-model": "^1.7.0",
+    "@backstage/config": "^1.2.0",
+    "@backstage/errors": "^1.2.4",
     "@backstage/integration": "^1.15.0",
     "@backstage/plugin-scaffolder-node": "^0.4.11",
-    "@backstage/config": "^1.2.0",
     "@backstage/types": "^1.1.1",
-    "@backstage/backend-plugin-api": "^1.0.0",
-    "luxon": "*",
-    "yaml": "*",
-    "zod": "*",
+    "decompress": "^4.2.1",
     "fs-extra": "*",
-    "jsonschema": "*",
-    "winston": "*",
     "globby": "*",
+    "jsonschema": "*",
+    "luxon": "*",
     "uuid": "*",
-    "decompress": "^4.2.1"
+    "winston": "*",
+    "yaml": "*",
+    "zod": "*"
   },
   "files": [
     "dist"

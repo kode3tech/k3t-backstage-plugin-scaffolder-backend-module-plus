@@ -1,5 +1,4 @@
 
-import { UrlReader } from '@backstage/backend-common';
 import { ScmIntegrations } from '@backstage/integration';
 import { examples } from './plain.examples';
 
@@ -9,6 +8,7 @@ import {
 } from '@backstage/plugin-scaffolder-node';
 import { Schema } from 'jsonschema';
 import { FETCH_PLAIN_POLY_ID } from './ids';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
 
 export type FieldsType = {
   url: string
@@ -77,7 +77,7 @@ export const OutputSchema: Schema = {
  * @public
  */
 export function createFetchPlainPlusAction(options: {
-  reader: UrlReader;
+  reader: UrlReaderService;
   integrations: ScmIntegrations;
 }) {  
   const templateAction = createFetchPlainFileAction(options)
