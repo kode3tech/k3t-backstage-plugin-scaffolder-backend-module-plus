@@ -21,6 +21,6 @@ git submodule add git@github.com:kode3tech/k3t-backstage-plugin-scaffolder-backe
 
 yarn login
 
-yarn examples && yarn release:full && yarn && yarn build &&  yarn pack && yarn publish --non-interactive
+yarn examples && yarn release:full && yarn && yarn tsc && yarn build &&  yarn pack && yarn publish --non-interactive
 
 ```
