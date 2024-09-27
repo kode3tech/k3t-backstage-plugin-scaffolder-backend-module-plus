@@ -1,4 +1,4 @@
-import { UrlReader } from "@backstage/backend-common";
+import { UrlReaderService } from "@backstage/backend-plugin-api";
 import { ScmIntegrations } from "@backstage/integration";
 import { ActionContext, fetchFile } from "@backstage/plugin-scaffolder-node";
 import { readFileSync, rmSync } from "node:fs";
@@ -10,7 +10,7 @@ export type ContentType = 'base64' | 'file' | 'raw' | 'url';
 export const AvailableTypes = ['base64', 'file', 'raw', 'url'];
 
 type fnContentResolver = (content: string, ctx: ActionContext<any, any>, env: {
-  reader: UrlReader;
+  reader: UrlReaderService;
   integrations: ScmIntegrations;
 }) => Promise<string> | string;
 

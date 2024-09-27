@@ -6,13 +6,14 @@ jest.mock('@backstage/plugin-scaffolder-node', () => {
 
 import os from 'os';
 import { resolve as resolvePath } from 'path';
-import { getVoidLogger, UrlReader } from '@backstage/backend-common';
+import { getVoidLogger } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import { fetchFile } from '@backstage/plugin-scaffolder-node';
 import { createZipDecompressAction } from './zip-decompress';
 import { PassThrough } from 'stream';
 import { ZIP_DECOMPRESS } from './ids';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
 
 describe(`${ZIP_DECOMPRESS}`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -22,7 +23,7 @@ describe(`${ZIP_DECOMPRESS}`, () => {
       },
     }),
   );
-  const reader: UrlReader = {
+  const reader: UrlReaderService = {
     readUrl: jest.fn(),
     readTree: jest.fn(),
     search: jest.fn(),

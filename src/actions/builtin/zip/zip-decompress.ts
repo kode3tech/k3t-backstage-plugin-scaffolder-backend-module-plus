@@ -1,4 +1,3 @@
-import { UrlReader } from '@backstage/backend-common';
 import { ScmIntegrations } from '@backstage/integration';
 import { ActionContext, createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import decompress from 'decompress';
@@ -8,6 +7,7 @@ import path from "node:path";
 import { resolvers } from '../../utils/content';
 import { ZIP_DECOMPRESS } from './ids';
 import { examples } from "./zip-decompress.examples";
+import { UrlReaderService } from '@backstage/backend-plugin-api';
 
 export type FieldsType = {
   content: string;
@@ -109,7 +109,7 @@ export const OutputSchema: Schema = {
 }
 
 export function createZipDecompressAction({reader, integrations}: {
-  reader: UrlReader;
+  reader: UrlReaderService;
   integrations: ScmIntegrations;
 }) {
   
