@@ -1,0 +1,63 @@
+import { HostDiscovery } from '@backstage/backend-defaults/discovery';
+import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
+import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node/alpha';
+
+import { 
+  createCatalogQueryAction,
+  createGlobAction,
+  createVarsAction,
+  createCatalogRegisterPlusAction,
+  createCatalogRelationAction,
+  createDebugFsReadAction,
+  createUuidV4GenAction,
+  createFetchPlainAction,
+  createFetchPlainFilePlusAction,
+  createFetchTemplatePlusAction,
+  createFilesystemRenamePlusAction,
+  createParseRepoUrlAction,
+  createRegexFsReplaceAction
+ } from './actions/builtin';
+
+import { CatalogClient } from '@backstage/catalog-client';
+import {
+  ScmIntegrations,
+} from '@backstage/integration';
+
+
+/**
+ * A backend module that registers the action into the scaffolder
+ */
+export const scaffolderCatalogModule = createBackendModule({
+  moduleId: 'k3tech:scaffolder-actions-plus',
+  pluginId: 'scaffolder',
+  register({ registerInit }) {
+    registerInit({
+      deps: {
+        scaffolderActions: scaffolderActionsExtensionPoint,
+        config: coreServices.rootConfig,
+        reader: coreServices.urlReader
+      },
+      async init({ scaffolderActions, config, reader}) {
+        const discoveryApi = HostDiscovery.fromConfig(config);
+        const catalogClient = new CatalogClient({ discoveryApi });
+        const integrations = ScmIntegrations.fromConfig(config);
+      
+        scaffolderActions.addActions(
+          createCatalogQueryAction({catalogClient}),
+          createGlobAction(),
+          createVarsAction(),
+          createCatalogRegisterPlusAction({catalogClient, integrations}),
+          createCatalogRelationAction({discoveryApi}),
+          createDebugFsReadAction(),
+          createUuidV4GenAction(),
+          createFetchPlainAction({integrations, reader}),
+          createFetchPlainFilePlusAction({integrations, reader}),
+          createFetchTemplatePlusAction({integrations, reader}),
+          createFilesystemRenamePlusAction(),
+          createParseRepoUrlAction({integrations}),
+          createRegexFsReplaceAction(),
+        );
+      }
+    });
+  },
+})

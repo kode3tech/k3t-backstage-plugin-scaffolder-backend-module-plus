@@ -3,7 +3,6 @@ import { JsonObject } from '@backstage/types';
 import { Schema } from 'jsonschema';
 import { DEBUG_FS_READ } from './ids';
 import { examples } from "./parse-repo-url.examples";
-import { Logger } from 'winston';
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
@@ -22,10 +21,6 @@ export const FieldsSchema: Schema = {
       items: {
         type: 'string'
       }
-    },
-    useMainLogger: {
-      title: 'Attach context logger to main application logger',
-      type: 'boolean',
     }
   },
 }
@@ -69,10 +64,7 @@ export const OutputSchema: Schema = {
 
 
 
-export function createDebugFsReadAction(options: {
-  logger: Logger
-}) {
-  const { logger: mainLogger } = options;
+export function createDebugFsReadAction() {
 
   return createTemplateAction<InputType, OutputType>({
     id: DEBUG_FS_READ,
@@ -86,8 +78,7 @@ export function createDebugFsReadAction(options: {
     async handler(ctx) {
       ctx.logger.info('Debug files');
 
-      const { input: { files, useMainLogger }, output, workspacePath, logger } = ctx
-      if(useMainLogger) logger.pipe(mainLogger)
+      const { input: { files }, output, workspacePath, logger } = ctx
       const results = []
 
       for (const file of (files ?? [])) {

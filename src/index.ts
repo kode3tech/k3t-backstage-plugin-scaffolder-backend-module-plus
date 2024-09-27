@@ -1,8 +1,3 @@
-/***/
-/**
- * The plus module for @backstage/plugin-scaffolder-backend.
- *
- * @packageDocumentation
- */
+import { scaffolderCatalogModule } from './module';
 
-export * from './actions';
+export default scaffolderCatalogModule;

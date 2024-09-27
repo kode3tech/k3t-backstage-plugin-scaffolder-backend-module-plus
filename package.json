@@ -36,7 +36,10 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/plugin-scaffolder-backend": "1.24.1"
+    "@backstage/backend-defaults": "^0.5.0",
+    "@backstage/backend-plugin-api": "^1.0.0",
+    "@backstage/plugin-scaffolder-node": "^0.4.11",
+    "@backstage/plugin-scaffolder-backend": "^1.25.0"
   },
   "devDependencies": {
     "@types/fs-extra": "11.0.4",
@@ -48,14 +51,15 @@
     "ts-node": "10.9.2"
   },
   "peerDependencies": {
-    "@backstage/errors": "*",
-    "@backstage/backend-common": "*",
-    "@backstage/catalog-client": "*",
-    "@backstage/catalog-model": "*",
-    "@backstage/integration": "*",
-    "@backstage/plugin-scaffolder-node": "*",
-    "@backstage/config": "*",
-    "@backstage/types": "*",
+    "@backstage/errors": "^1.2.4",
+    "@backstage/backend-common": "^0.25.0",
+    "@backstage/catalog-client": "^1.7.0",
+    "@backstage/catalog-model": "^1.7.0",
+    "@backstage/integration": "^1.15.0",
+    "@backstage/plugin-scaffolder-node": "^0.4.11",
+    "@backstage/config": "^1.2.0",
+    "@backstage/types": "^1.1.1",
+    "@backstage/backend-plugin-api": "^1.0.0",
     "luxon": "*",
     "yaml": "*",
     "zod": "*",
