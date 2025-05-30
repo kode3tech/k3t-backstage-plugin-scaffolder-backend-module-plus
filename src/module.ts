@@ -2,21 +2,21 @@ import { HostDiscovery } from '@backstage/backend-defaults/discovery';
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
 import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node/alpha';
 
-import { 
+import {
   createCatalogQueryAction,
-  createGlobAction,
-  createVarsAction,
   createCatalogRegisterPlusAction,
   createCatalogRelationAction,
   createDebugFsReadAction,
-  createUuidV4GenAction,
   createFetchPlainAction,
   createFetchPlainFilePlusAction,
   createFetchTemplatePlusAction,
   createFilesystemRenamePlusAction,
+  createGlobAction,
   createParseRepoUrlAction,
-  createRegexFsReplaceAction
- } from './actions/builtin';
+  createRegexFsReplaceAction,
+  createUuidV4GenAction,
+  createVarsAction
+} from './actions/builtin';
 
 import { CatalogClient } from '@backstage/catalog-client';
 import {
@@ -28,7 +28,7 @@ import {
  * A backend module that registers the action into the scaffolder
  */
 export const scaffolderCatalogModule = createBackendModule({
-  moduleId: 'k3tech:scaffolder-actions-plus',
+  moduleId: 'k3tech.scaffolder-actions-plus',
   pluginId: 'scaffolder',
   register({ registerInit }) {
     registerInit({
