@@ -1,7 +1,4 @@
-
-
 import yaml from 'yaml';
-
 import os from 'os';
 import { resolve as resolvePath } from 'path';
 import { getVoidLogger } from '@backstage/backend-common';
@@ -39,11 +36,13 @@ describe(`${FETCH_PLAIN_POLY_ID} examples`, () => {
 
   const action = createFetchPlainPlusAction({ integrations, reader });
   const mockContext: ActionContext<any, any> = {
+    task: {id: FETCH_PLAIN_POLY_ID },
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
+    // logger: mockServices.rootLogger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

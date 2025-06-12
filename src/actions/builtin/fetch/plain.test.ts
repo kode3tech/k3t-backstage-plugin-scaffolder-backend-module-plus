@@ -10,7 +10,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import { ActionContext, fetchContents } from '@backstage/plugin-scaffolder-node';
-import { createFetchPlainPlusAction } from './plain';
+import { createFetchPlainPlusAction, FieldsType } from './plain';
 import { PassThrough } from 'stream';
 import { FETCH_PLAIN_POLY_ID } from './ids';
 import { UrlReaderService } from '@backstage/backend-plugin-api';
@@ -34,7 +34,8 @@ describe(`${FETCH_PLAIN_POLY_ID}`, () => {
   });
 
   const action = createFetchPlainPlusAction({ integrations, reader });
-  const mockContext: ActionContext<any, any> = {
+  const mockContext = (_paramsPatch: Partial<FieldsType> = {}): ActionContext<any, any> => ({
+    task: {id: FETCH_PLAIN_POLY_ID},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
@@ -43,12 +44,12 @@ describe(`${FETCH_PLAIN_POLY_ID}`, () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
-  };
+  });
 
   it('should disallow a target path outside working directory', async () => {
     await expect(
       action.handler({
-        ...mockContext,
+        ...mockContext(),
         input: {
           sources: [{
             url: 'https://github.com/backstage/community/tree/main/backstage-community-sessions/assets',
@@ -63,7 +64,7 @@ describe(`${FETCH_PLAIN_POLY_ID}`, () => {
 
   it('should fetch plain', async () => {
     await action.handler({
-      ...mockContext,
+      ...mockContext(),
       input: {
         sources: [{
           url: 'https://github.com/backstage/community/tree/main/backstage-community-sessions/assets',
@@ -73,7 +74,7 @@ describe(`${FETCH_PLAIN_POLY_ID}`, () => {
     });
     expect(fetchContents).toHaveBeenCalledWith(
       expect.objectContaining({
-        outputPath: resolvePath(mockContext.workspacePath, 'lol'),
+        outputPath: resolvePath(mockContext().workspacePath, 'lol'),
         fetchUrl:
           'https://github.com/backstage/community/tree/main/backstage-community-sessions/assets',
       }),

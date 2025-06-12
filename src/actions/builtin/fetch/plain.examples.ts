@@ -1,8 +1,9 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from './plain';
+// import { InputType } from './plain';
 import { FETCH_PLAIN_POLY_ID } from './ids';
+import { FieldsType } from './plain';
 
 export const examples: TemplateExample[] = [
   {
@@ -16,11 +17,11 @@ export const examples: TemplateExample[] = [
           input: {
             commonParams: {
               targetPath: './'
-            },
+            } as FieldsType,
             sources: [{
               url: 'https://github.com/backstage/community/tree/main/backstage-community-sessions/assets',
-            }]
-          } as InputType,
+            }] as FieldsType[]
+          },
         },
       ],
     }),
@@ -41,8 +42,8 @@ export const examples: TemplateExample[] = [
             sources: [{
               url: 'https://github.com/backstage/community/tree/main/backstage-community-sessions/assets',
               targetPath: 'fetched-data',
-            }]
-          } as InputType,
+            }] as FieldsType[]
+          },
         },
       ],
     }),

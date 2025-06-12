@@ -20,8 +20,10 @@ import { z } from "zod";
 import { examples } from './rename.examples';
 import { InputError } from '@backstage/errors';
 import { FS_RENAME_PLURI_ID } from './ids';
+import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
+import fs from 'fs-extra';
 
-export const ParamsSchema = z.object({
+export const FieldsSchema = z.object({
   from: z.string({ 
     description: 'The source location of the file to be renamed'
   }),
@@ -35,8 +37,8 @@ export const ParamsSchema = z.object({
 
 
 export const InputSchema = z.object({
-  commonParams: z.optional(ParamsSchema),
-  files: z.array(ParamsSchema)
+  commonParams: z.optional(FieldsSchema),
+  files: z.array(FieldsSchema)
 })
 
 export const OutputSchema = z.object({
@@ -52,10 +54,19 @@ export const createFilesystemRenamePlusAction = () => {
 
   const templateAction = createFilesystemRenameAction();
 
-  return createTemplateAction<any,any, typeof InputSchema, typeof OutputSchema>({
+  return createTemplateAction({
     id: FS_RENAME_PLURI_ID,
     description: 'Renames files and directories within the workspace',
     examples,
+    schema: {
+      input: {
+        commonParams: (d) => d.object(FieldsSchema.shape).optional(),
+        files: (d) => d.array(d.object(FieldsSchema.shape))
+      },
+      output: {
+        results: (d) => d.array(d.object({}))
+      }
+    },
     supportsDryRun: true,
     async handler(ctx) {
       ctx.logger.info('Fetching plain content from remote URL');
@@ -78,17 +89,42 @@ export const createFilesystemRenamePlusAction = () => {
 
       const result: Record<string, any> = {}
 
-      await templateAction.handler({ 
-        ...ctx, 
-        output: (k, v) => {result[k] = v},
-        input: {
-          files: files.map(file => {
-            return {
-              ...{...(commonParams ?? {}), ...file}
-            }
-          })
+      for (const file of files) {
+        if (!file.from || !file.to) {
+          throw new InputError('each file must have a from and to property');
         }
-      })
+        const sourceFilepath = resolveSafeChildPath(
+          ctx.workspacePath,
+          file.from,
+        );
+        const destFilepath = resolveSafeChildPath(ctx.workspacePath, file.to);
+
+        try {
+          await fs.move(sourceFilepath, destFilepath, {
+            overwrite: file.overwrite ?? false,
+          });
+          ctx.logger.info(
+            `File ${sourceFilepath} renamed to ${destFilepath} successfully`,
+          );
+        } catch (err: any) {
+          ctx.logger.error(
+            `Failed to rename file ${sourceFilepath} to ${destFilepath}:`,
+            err,
+          );
+        }
+      }
+
+      // await templateAction.handler({ 
+      //   ...ctx, 
+      //   output: (k, v) => {result[k] = v},
+      //   input: {
+      //     files: files.map(file => {
+      //       return {
+      //         ...{...(commonParams ?? {}), ...file}
+      //       }
+      //     })
+      //   }
+      // })
 
       results.push(result)
 

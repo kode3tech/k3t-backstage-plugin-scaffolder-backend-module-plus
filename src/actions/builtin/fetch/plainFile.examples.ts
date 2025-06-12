@@ -16,7 +16,7 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from './plainFile';
+import { FieldsType } from './plainFile';
 import { FETCH_PLAIN_FILE_ID } from './ids';
 
 export const examples: TemplateExample[] = [
@@ -31,12 +31,12 @@ export const examples: TemplateExample[] = [
           input: {
             commonParams: {
               url: 'https://github.com/backstage/community/tree/main/backstage-community-sessions/assets/Backstage%20Community%20Sessions.png',
-            },
+            } as FieldsType,
             files: [
               { targetPath: 'target-main' },
               { targetPath: 'target-optional' }
-            ]
-          } as InputType ,
+            ] as FieldsType[]
+          },
         },
       ],
     }),

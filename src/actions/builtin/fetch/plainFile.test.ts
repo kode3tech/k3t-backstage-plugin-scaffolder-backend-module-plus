@@ -50,6 +50,7 @@ describe(`${FETCH_PLAIN_FILE_ID}`, () => {
 
   const action = createFetchPlainFilePlusAction({ integrations, reader });
   const mockContext: ActionContext<any, any> = {
+    task: {id: FETCH_PLAIN_FILE_ID},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

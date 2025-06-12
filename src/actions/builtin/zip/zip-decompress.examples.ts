@@ -2,7 +2,7 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from './zip-decompress';
+import { FieldsType } from './zip-decompress';
 import { ZIP_DECOMPRESS } from './ids';
 
 export const examples: TemplateExample[] = [
@@ -17,12 +17,12 @@ export const examples: TemplateExample[] = [
           input: {
             commonParams: {
               encoding: 'file',
-            },
+            } as FieldsType,
             sources: [
               { content: './compressed-1.zip', destination: './tmp.zip-1/'},
               { content: './compressed-2.zip', destination: './tmp.zip-2/'},
-            ]
-          } as InputType,
+            ] as FieldsType[]
+          },
         },
       ],
     }),

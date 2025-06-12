@@ -16,7 +16,7 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from './template';
+import { FieldsType } from './template';
 import { FETCH_TEMPLATE_ID } from './ids';
 
 export const examples: TemplateExample[] = [
@@ -37,12 +37,12 @@ export const examples: TemplateExample[] = [
                 itemList: ['first', 'second', 'third'],
                 showDummyFile: false,
               }              
-            } ,
+            } as FieldsType,
             templates: [{
               url: './skeleton',
               targetPath: './'
-            }] 
-          } as InputType,
+            }] as FieldsType[]
+          }
         },
       ],
     }),
@@ -64,7 +64,7 @@ export const examples: TemplateExample[] = [
                 itemList: ['first', 'second', 'third'],
                 showDummyFile: false,
               }              
-            },
+            } as FieldsType,
             templates: [
               {
                 url: './skeleton/main',
@@ -74,11 +74,10 @@ export const examples: TemplateExample[] = [
                 url: './skeleton/optional',
                 targetPath: './target-optional'
               }
-            ]
-          } as InputType,
+            ] as FieldsType[]
+          },
         },
       ],
     }),
   },
-
 ];

@@ -1,12 +1,10 @@
 
 import { ScmIntegrations } from '@backstage/integration';
-import { createFetchTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import { Schema } from 'jsonschema';
-import { examples } from './template.examples'
+import { createTemplateAction, fetchFile } from '@backstage/plugin-scaffolder-node';
+import { examples } from './template.examples';
 import { FETCH_TEMPLATE_ID } from './ids';
-import { UrlReaderService } from '@backstage/backend-plugin-api';
-
+import { resolveSafeChildPath, UrlReaderService } from '@backstage/backend-plugin-api';
+import { z } from "zod";
 
 export type FieldsType = {
   url: string
@@ -19,115 +17,72 @@ export type FieldsType = {
   replace: boolean
 }
 
-export const FieldsSchema = {
-  url: {
-    title: 'Fetch URL',
-    description:
-      'Relative path or absolute URL pointing to the directory tree to fetch',
-    type: 'string',
-  },
-  targetPath: {
-    title: 'Target Path',
-    description:
-      'Target path within the working directory to download the contents to. Defaults to the working directory root.',
-    type: 'string',
-  },
-  values: {
-    title: 'Template Values',
-    description: 'Values to pass on to the templating engine',
-    type: 'object',
-  },
-  copyWithoutRender: {
-    title: '[Deprecated] Copy Without Render',
-    description:
-      'An array of glob patterns. Any files or directories which match are copied without being processed as templates.',
-    type: 'array',
-    items: {
-      type: 'string',
-    },
-  },
-  copyWithoutTemplating: {
-    title: 'Copy Without Templating',
-    description:
-      'An array of glob patterns. Contents of matched files or directories are copied without being processed, but paths are subject to rendering.',
-    type: 'array',
-    items: {
-      type: 'string',
-    },
-  },
-  cookiecutterCompat: {
-    title: 'Cookiecutter compatibility mode',
-    description:
-      'Enable features to maximise compatibility with templates built for fetch:cookiecutter',
-    type: 'boolean',
-  },
-  templateFileExtension: {
-    title: 'Template File Extension',
-    description:
-      'If set, only files with the given extension will be templated. If set to `true`, the default extension `.njk` is used.',
-    type: ['string', 'boolean'],
-  },
-  replace: {
-    title: 'Replace files',
-    description:
-      'If set, replace files in targetPath instead of skipping existing ones.',
-    type: 'boolean',
-  },
-}
+export const FieldsSchema = z.object({
+  url: z.string({
+    description: 'Fetch URL', 
+    message: 'Relative path or absolute URL pointing to the directory tree to fetch.'
+  }),
+  targetPath: z.string({
+    description: 'Target Path',
+    message: 'Target path within the working directory to download the contents to.'
+  }),
+  values: z.object({}, {
+    description: 'Template Values',
+    message: 'Values to pass on to the templating engine'
+  }),
+  copyWithoutRender: z.array(
+    z.string({
+      description: '[Deprecated] Copy Without Render',
+      message: 'An array of glob patterns. Any files or directories which match are copied without being processed as templates.'
+    })
+  ).optional(),
+  copyWithoutTemplating: z.array(
+    z.string({
+      description: 'Copy Without Templating',
+      message: 'An array of glob patterns. Contents of matched files or directories are copied without being processed, but paths are subject to rendering.'
+    })
+  ).optional(),
+  cookiecutterCompat: z.boolean({
+    description: 'Cookiecutter compatibility mode',
+    message: 'Enable features to maximise compatibility with templates built for fetch:cookiecutter'
+  }).optional(),
+  templateFileExtension: z.string({
+    description: 'Template File Extension',
+    message: 'Target path within the working directory to download the contents to.'
+  }).optional(),
+  replace: z.boolean({
+    description: 'Replace files',
+    message: 'If set, replace files in targetPath instead of skipping existing ones.'
+  }).optional(),
+});
 
-export const InputSchema: Schema = {
-  type: 'object',
-  properties: {
-    commonParams: {
-      type: 'object',
-      properties:{
-        ...FieldsSchema
-      }
-    },
-    templates: {
-      type: 'array',
-      items: {
-        type: 'object',
-        required: ['url'],
-        properties: {
-          ...FieldsSchema
-        }
-      }
-    }
-  }
-}
+export const InputSchema = z.object({
+  commonParams: FieldsSchema.optional(),
+  templates: z.array(FieldsSchema)
+});
 
-export type InputType = {
-  commonParams?: Partial<FieldsType>,
-  templates: FieldsType[]
-}
-
-export type OutputType = {
-  results: any[]
-}
-
-export const OutputSchema: Schema = {
-  type: 'object',
-  properties: {
-    results: {
-      type: 'array'
-    }
-  }
-}
+export const OutputSchema = z.object({
+  results: z.array(z.any())
+});
 
 export function createFetchTemplatePlusAction(options: {
   integrations: ScmIntegrations,
   reader: UrlReaderService
 }) {
-  const templateAction = createFetchTemplateAction(options)
+  const {reader, integrations} = options;
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: FETCH_TEMPLATE_ID,
     description: "Same from 'fetch:template' for array list.",
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema
+      input: {
+        commonParams: (d) => d.object(FieldsSchema.shape).optional(),
+        templates: (d) => d.array(d.object(FieldsSchema.shape))
+      },
+      output: {
+        results: (d) => d.array(d.object({}))
+      }
     },
     async handler(ctx) {
       const { 
@@ -135,7 +90,6 @@ export function createFetchTemplatePlusAction(options: {
           templates, 
           commonParams
         }, 
-        logger, 
         output 
       } = ctx
       
@@ -146,21 +100,25 @@ export function createFetchTemplatePlusAction(options: {
           ...{...(commonParams ?? {}), ...value}
         }
         const { url }  = input;
-        
-        logger.info(`Fetching template from '${url}'...`)
+        ctx.logger.info(`Fetching template from '${url}'...`)
 
         const result: Record<string, any> = {}
+        ctx.logger.info('Fetching plain content from remote URL');
 
-        await templateAction.handler({ 
-          ...ctx, 
-          output: (k, v) => {result[k] = v},
-          input: {...input, values: (input.values ?? {})}
-        })
+        // Finally move the template result into the task workspace
+        const outputPath = resolveSafeChildPath(ctx.workspacePath, input.targetPath ?? './');
+
+        await fetchFile({
+          reader,
+          integrations,
+          baseUrl: ctx.templateInfo?.baseUrl,
+          fetchUrl: input.url,
+          outputPath,
+          // token: input.token,
+        });
         results.push(result)
       }
       output('results', results)
-    }
+    },
   });
 }
-  
-  

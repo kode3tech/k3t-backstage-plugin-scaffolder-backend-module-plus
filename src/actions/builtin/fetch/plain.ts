@@ -1,75 +1,36 @@
 
 import { ScmIntegrations } from '@backstage/integration';
+import { createTemplateAction, fetchContents } from '@backstage/plugin-scaffolder-node';
 import { examples } from './plain.examples';
-
-import { createFetchPlainFileAction } from '@backstage/plugin-scaffolder-backend';
-import {
-  createTemplateAction
-} from '@backstage/plugin-scaffolder-node';
-import { Schema } from 'jsonschema';
 import { FETCH_PLAIN_POLY_ID } from './ids';
-import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { resolveSafeChildPath, UrlReaderService } from '@backstage/backend-plugin-api';
+import { z } from "zod";
 
 export type FieldsType = {
   url: string
   targetPath: string
 }
 
-export const FieldsSchema = {
-  url: {
-    title: 'Fetch URL',
-    description:
-      'Relative path or absolute URL pointing to the directory tree to fetch',
-    type: 'string',
-  },
-  targetPath: {
-    title: 'Target Path',
-    description:
-      'Target path within the working directory to download the contents to.',
-    type: 'string',
-  },
-}
 
+export const FieldsSchema = z.object({
+  url: z.string({
+    description: 'Fetch URL', 
+    message: 'Relative path or absolute URL pointing to the directory tree to fetch.'
+  }),
+  targetPath: z.string({
+    description: 'Target Path',
+    message: 'Target path within the working directory to download the contents to.'
+  })
+});
 
-export const InputSchema: Schema = {
-  type: 'object',
-  properties: {
-    commonParams: {
-      type: 'object',
-      properties:{
-        ...FieldsSchema
-      }
-    },
-    templates: {
-      type: 'array',
-      items: {
-        type: 'object',
-        required: ['url'],
-        properties: {
-          ...FieldsSchema
-        }
-      }
-    }
-  }
-}
+export const InputSchema = z.object({
+  commonParams: FieldsSchema.optional(),
+  souces: z.array(FieldsSchema)
+})
 
-export type InputType = {
-  commonParams?: Partial<FieldsType>,
-  sources: FieldsType[]
-}
-
-export type OutputType = {
-  results: any[]
-}
-
-export const OutputSchema: Schema = {
-  type: 'object',
-  properties: {
-    results: {
-      type: 'array'
-    }
-  }
-}
+export const OutputSchema = z.object({
+  results: z.array(z.any())
+})
 
 /**
  * Downloads content and places it in the workspace, or optionally
@@ -80,16 +41,21 @@ export function createFetchPlainPlusAction(options: {
   reader: UrlReaderService;
   integrations: ScmIntegrations;
 }) {  
-  const templateAction = createFetchPlainFileAction(options)
+  const {reader, integrations} = options;
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: FETCH_PLAIN_POLY_ID,
     description:
     'Downloads content and places it in the workspace, or optionally in a subdirectory specified by the `targetPath` input option.',
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema
+      input: {
+        commonParams: (d) => d.object(FieldsSchema.shape).optional(),
+        sources: (d) => d.array(d.object(FieldsSchema.shape))
+      },
+      output: {
+        results: (d) => d.array(d.object({}))
+      }
     },
     supportsDryRun: true,
     async handler(ctx) {
@@ -101,7 +67,6 @@ export function createFetchPlainPlusAction(options: {
           sources, 
           commonParams
         }, 
-        logger, 
         output 
       } = ctx
       
@@ -112,16 +77,22 @@ export function createFetchPlainPlusAction(options: {
           ...{...(commonParams ?? {}), ...source}
         }
         const { url }  = input;
-        
-        logger.info(`Fetching pain from '${url}'...`)
+        ctx.logger.info(`Fetching pain from '${url}'...`)
 
         const result: Record<string, any> = {}
+        ctx.logger.info('Fetching plain content from remote URL');
 
-        await templateAction.handler({ 
-          ...ctx, 
-          output: (k, v) => {result[k] = v},
-          input: {...input}
-        })
+        // Finally move the template result into the task workspace
+        const outputPath = resolveSafeChildPath(ctx.workspacePath, input.targetPath ?? './');
+
+        await fetchContents({
+          reader,
+          integrations,
+          baseUrl: ctx.templateInfo?.baseUrl,
+          fetchUrl: input.url,
+          outputPath,
+          // token: input.token,
+        });
         results.push(result)
       }
       output('results', results)

@@ -1,125 +1,76 @@
 import { ScmIntegrations } from '@backstage/integration';
 import { ActionContext, createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import decompress from 'decompress';
-import { Schema } from 'jsonschema';
 import { mkdirSync } from "node:fs";
 import path from "node:path";
 import { resolvers } from '../../utils/content';
 import { ZIP_DECOMPRESS } from './ids';
 import { examples } from "./zip-decompress.examples";
 import { UrlReaderService } from '@backstage/backend-plugin-api';
-
-export type FieldsType = {
-  content: string;
-  destination: string;
-  encoding?: 'base64' | 'file' | 'url';
-  skipErrors?: boolean;
-};
-
-export const FieldsSchema: Schema = {
-  type: 'object',
-  required: ['content', 'destination'],
-  properties: {
-    content: {
-      type: 'string',
-      title: 'Zip Content',
-      description: 'Zip File Content.',
-    },
-    destination: {
-      type: 'string',
-      title: 'Relative path of destination files',
-      description: 'Relative path of destination files.',
-    },
-    encoding: {
-      type: 'string',
-      title: 'Indicate is encoded "content".',
-      // default: 'base64',
-      description:
-        'Indicate if input "content" field has encoded in "base64", "file" or "url".',
-      enum: ['base64', 'file', 'url']
-    },
-    skipErrors: {
-      type: 'boolean',
-      title: 'Not Throw on errors.',
-      description: 'Not interrupts next actions.',
-      // default: false,
-    },
-  },
-}
-
-export const InputSchema: Schema = {
-  type: 'object',
-  properties: {
-    commonParams: FieldsSchema,
-    sources: {
-      type: 'array',
-      items: FieldsSchema
-    }
-  }
-}
-
-export type InputType = {
-  commonParams?: Partial<FieldsType>,
-  sources: FieldsType[]
-}
-
-export type OutputFields = {
-  success: boolean;
-  files: Array<{
-    mode: number;
-    mtime: string;
-    path: string;
-    type: string;
-  }>;
-  errorMessage?: string;
-}
+import z from 'zod';
 
 
-export type OutputType = {
-  results: Array<OutputFields>
-}
+export const FieldsSchema = z.object({
+  content: z.string({
+    description: 'Zip Content',
+    message: 'Zip File Content.'
+  }).optional(),
+  destination: z.string({
+    description: 'Relative path of destination files',
+    message: 'Relative path of destination files.'
+  }).optional(),
+  encoding: z.enum(['base64', 'file', 'url'], {
+    description: 'Indicate is encoded "content".',
+    message: 'Indicate if input "content" field has encoded in "base64", "file" or "url".'
+  }).default('file').optional(),
+  skipErrors: z.boolean({
+    description: 'Not Throw on errors.',
+    message: 'Not interrupts next actions.',
+  }).default(true).optional(),
+})
 
-export const OutputSchema: Schema = {
-  type: "object",
-  properties: {
-    results: {
-      type: "array",
-      items: { 
-        type: "object",
-        properties: {
-          success: {
-            title: 'Indicates if OpenApi Spec is valid.',
-            type: 'boolean',
-          },
-          files: {
-            type: 'array',
-            title: 'List of decompressed files.',
-            items: {
-              type: 'object',
-            },
-          },
-          errorMessage: {
-            title: 'Message if is not valid.',
-            type: 'string',
-          },
-        }        
-      },
-    }
-  }
-}
+export type FieldsType = z.infer<typeof FieldsSchema>;
+
+export const InputSchema = z.object({
+  commonParams: FieldsSchema.optional(),
+  sources: z.array(FieldsSchema)
+});
+
+export const OutputSchema = z.object({
+  success: z.boolean({
+    description: 'Indicates if OpenApi Spec is valid.',
+  }),
+  files: z.array(
+    z.object({
+      mode: z.number(),
+      mtime: z.string(),
+      path: z.string(),
+      type: z.string(),
+    }), 
+    { description: 'List of decompressed files.' }
+  ),
+  errorMessage: z.string({
+    description: 'Message if is not valid.'
+  }).optional(),
+});
 
 export function createZipDecompressAction({reader, integrations}: {
   reader: UrlReaderService;
   integrations: ScmIntegrations;
 }) {
   
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: ZIP_DECOMPRESS,
     description: 'Decmpress an zip files from diferent sources types.',
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema,
+      input: {
+        commonParams: (d) => d.object(FieldsSchema.shape).optional(),
+        sources: (d) => d.array(d.object(FieldsSchema.shape))
+      },
+      output: {
+        results: (d) => d.array(d.object(OutputSchema.shape))
+      }
     },
     async handler(ctx) {
 
@@ -133,7 +84,7 @@ export function createZipDecompressAction({reader, integrations}: {
         workspacePath
       } = ctx;
 
-      const results: Array<OutputFields> = []
+      const results: Array<z.infer<typeof OutputSchema>> = []
 
       for (const source of sources) {
         const { 
@@ -146,6 +97,9 @@ export function createZipDecompressAction({reader, integrations}: {
         }
         
         try {
+          if(!content) throw new Error('Content is required, fill on "commonParams.content" or "sources[].content".');
+          if(!destination) throw new Error('Destination is required, fill on "commonParams.destination" or "sources[].destination".');
+          
           const finalContent = await resolvers[encoding](
             content, ctx as ActionContext<any, any>, 
             {reader, integrations}
@@ -167,7 +121,7 @@ export function createZipDecompressAction({reader, integrations}: {
         } catch (e: any) {
           results.push({success: false, files: [], errorMessage: e?.message || e});
           // logger.pipe(mainLogger)
-          logger.error(e?.message);
+          if(logger.error) logger.error(e?.message);
         }
       }
       
