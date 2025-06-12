@@ -6,6 +6,8 @@
   "exclude": ["node_modules", "**.test.ts"],
   "compilerOptions": {
     "outDir": "dist-types",
-    "rootDir": "."
+    "rootDir": ".",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
   }
 }
