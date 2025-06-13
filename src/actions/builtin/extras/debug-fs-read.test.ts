@@ -34,6 +34,7 @@ describe(`${DEBUG_FS_READ}`, () => {
   const action = createDebugFsReadAction();
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: DEBUG_FS_READ},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

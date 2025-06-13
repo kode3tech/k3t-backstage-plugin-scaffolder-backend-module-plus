@@ -34,6 +34,7 @@ describe(`${REGEX_FS_REPLACE}`, () => {
   const action = createRegexFsReplaceAction();
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: REGEX_FS_REPLACE},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

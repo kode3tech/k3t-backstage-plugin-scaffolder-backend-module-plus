@@ -5,78 +5,25 @@ import { JsonObject } from '@backstage/types';
 import { Schema } from 'jsonschema';
 import { PARSE_REPO_URL } from './ids';
 import { examples } from "./parse-repo-url.examples";
+import z from 'zod';
 
-export type FieldsType = {
-  reposUrls: string[];
-} & JsonObject;
-
-export const FieldsSchema: Schema = {
-  type: 'object',
-  required: ['reposUrls'],
-  properties: {
-    reposUrls: { 
-      title: 'reposUrls',
-      description: 'reposUrls',
-      type: 'array',
-      items: { type: 'string'}
-    }
-  },
-}
+export const InputSchema = z.object({
+  reposUrls: z.array(z.string({description: 'host?owner=any&organization=any&workspace=any&project=any'})),
+});
 
 
-export const InputSchema: Schema = FieldsSchema
-
-export type InputType = FieldsType
-
-export type OutputFields = RepoSpec
-
-export type OutputType = {
-  results: Array<OutputFields>
-}
-
-
-export const OutputSchema: Schema = {
-  type: "object",
-  properties: {
-    results: {
-      type: "array",
-      items: { 
-        type: "object",
-        properties: {
-          repo: {
-            type: 'string',
-          },
-          host: {
-            type: 'string',
-          },
-          owner: {
-            type: 'string',
-          },
-          organization: {
-            type: 'string',
-          },
-          workspace: {
-            type: 'string',
-          },
-          project: {
-            type: 'string',
-          },
-        
-        }
-      },
-    }
-  }
-}
+export const OutputSchema = z.object({
+  repo: z.string(),
+  host: z.string(),
+  owner: z.string().optional(),
+  organization: z.string().optional(),
+  workspace: z.string().optional(),
+  project: z.string().optional(),
+})
 
 
-export type RepoSpec = {
-  repo: string;
-  host: string;
-  owner?: string;
-  organization?: string;
-  workspace?: string;
-  project?: string;
-};
+
+export type RepoSpec = z.infer<typeof OutputSchema>;
 
 /**
  *  
@@ -147,14 +94,18 @@ export function createParseRepoUrlAction(options: {
 }) {
   const { integrations } = options;
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: PARSE_REPO_URL,
     description:
       'Parse Repo url like "host?owner=any&organization=any&workspace=any&project=any"',
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema,
+      input: {
+        reposUrls: (d) => d.array(d.string({description: 'host?owner=any&organization=any&workspace=any&project=any'})),
+      },
+      output: {
+        results: (d) => d.array(OutputSchema)
+      },
     },
 
     async handler(ctx) {

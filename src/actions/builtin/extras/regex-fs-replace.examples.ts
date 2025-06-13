@@ -1,7 +1,7 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from "./regex-fs-replace";
+import { FieldsType } from "./regex-fs-replace";
 import { REGEX_FS_REPLACE } from './ids';
 
 export const examples: TemplateExample[] = [
@@ -18,7 +18,7 @@ export const examples: TemplateExample[] = [
             pattern: 'a',
             replacement: 'b',
             flags: 'g'
-          } as InputType,
+          } as FieldsType,
         },
       ],
     }),
@@ -42,7 +42,7 @@ export const examples: TemplateExample[] = [
               "$1	</dependency>",
               "$1</dependencies>",
             ].join('\n')
-          } as InputType,
+          } as FieldsType,
         },
       ],
     }),

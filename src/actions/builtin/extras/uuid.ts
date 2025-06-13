@@ -5,58 +5,36 @@ import { Schema } from 'jsonschema';
 import * as uuid from 'uuid';
 import { UUID_V4_GEN } from './ids';
 import { examples } from "./uuid.examples";
+import z from "zod";
 
 export type FieldsType = {
   amount: number
-} & JsonObject;
+};
 
-export const FieldsSchema: Schema = {
-  type: 'object',
-  required: ['amount'],
-  properties: {
-    amount: {
-      title: 'Amount of uuid to generate ',
-      type: 'number',
-    }
-  },
-}
-
-
-export const InputSchema: Schema = FieldsSchema
+export const FieldsSchema = z.object({
+  amount: z.number({description: 'Amount of uuid to generate.'})
+});
 
 export type InputType = FieldsType
 
-export type OutputFields = string
-
-export type OutputType = {
-  results: Array<OutputFields>
-}
-
-
-export const OutputSchema: Schema = {
-  type: "object",
-  properties: {
-    results: {
-      title: 'List of generated uuid\'s.',
-      type: "array",
-      items: { 
-        type: "string"
-      },
-    }
-  }
-}
-
+export const OutputSchema = z.object({
+  results: z.array(z.string(), {description: 'List of generated uuid\'s.'})
+})
 
 
 export function createUuidV4GenAction() {
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: UUID_V4_GEN,
     description: 'Generate a list of UUID\'s v4',
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema,
+      input: {
+        amount: (d) => d.number({description: 'Amount of uuid to generate.'}).default(1),
+      },
+      output: {
+        results: (d) => d.array(z.string(), {description: 'List of generated uuid\'s.'})
+      }
     },
 
     async handler(ctx) {

@@ -34,6 +34,7 @@ describe(`${GLOB}`, () => {
   const action = createGlobAction();
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: GLOB},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

@@ -34,6 +34,7 @@ describe(`${CATALOG_QUERY_ID}`, () => {
   });
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: CATALOG_QUERY_ID},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

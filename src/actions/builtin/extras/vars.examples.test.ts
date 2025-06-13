@@ -14,6 +14,7 @@ describe(`${VARS} examples`, () => {
   const action = createVarsAction();
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: VARS},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

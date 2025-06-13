@@ -9,10 +9,10 @@ import { createCatalogRegisterPlusAction } from './register';
 import { Entity } from '@backstage/catalog-model';
 import { examples } from './register.examples';
 import yaml from 'yaml';
-import { CATALOG_REGISTER_ID } from './ids';
+import { CATALOG_RELATIONS_ID } from './ids';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
-describe(`${CATALOG_REGISTER_ID} examples`, () => {
+describe(`${CATALOG_RELATIONS_ID} examples`, () => {
   const integrations = ScmIntegrations.fromConfig(
     new ConfigReader({
       integrations: {
@@ -32,6 +32,7 @@ describe(`${CATALOG_REGISTER_ID} examples`, () => {
   });
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: CATALOG_RELATIONS_ID},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

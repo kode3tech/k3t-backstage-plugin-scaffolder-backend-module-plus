@@ -34,6 +34,7 @@ describe(`${UUID_V4_GEN}`, () => {
   const action = createUuidV4GenAction();
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: UUID_V4_GEN},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

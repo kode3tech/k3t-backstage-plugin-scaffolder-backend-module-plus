@@ -5,6 +5,7 @@ import { Schema } from 'jsonschema';
 import { Entity } from '@backstage/catalog-model';
 import { JsonObject } from '@backstage/types';
 import { examples } from "./query.examples";
+import z from 'zod';
 
 export type FieldsType = {
   fields?: string[];
@@ -17,65 +18,22 @@ export type FieldsType = {
   };
 } & JsonObject;
 
-export const FieldsSchema: Schema = {
-  type: 'object',
-  required: ['filter'],
-  properties: {
-    fields: { 
-      title: 'fields',
-      description: 'fields',
-      type: 'array',
-      items: { type: 'string'}
-    },
-    limit: { 
-      title: 'limit',
-      description: 'limit',
-      type: 'number',
-    },
-    filter: { 
-      title: 'filter',
-      description: 'filter',
-      type: 'any'
-    },
-    orderFields: { 
-      title: 'orderFields',
-      description: 'orderFields',
-      type: 'object',
-      properties: {
-        field: { 
-          title: 'field',
-          description: 'field',
-          type: 'string'
-        },
-        order: { 
-          title: 'field',
-          description: 'field',
-          type: 'string',
-          enum:[
-            'asc', 
-            'desc'
-          ]
-        }
-      }
-    },
-    fullTextFilter: { 
-      title: 'fullTextFilter',
-      description: 'fullTextFilter',
-      type: ''
-    },
-  },
+export const FieldsSchema = {
+  fields: z.array(z.string()).optional(),
+  limit: z.number({description: 'Limit the number of results returned.'}).optional(),
+  filter: z.object({}).optional(),
+  orderFields: z.object({
+    field: z.string(),
+    order: z.enum(['asc', 'desc'])
+  }).optional(),
+  fullTextFilter: z.object({
+      term: z.string(),
+      fields: z.array(z.string()),
+  }).optional(),
 }
-
-
-export const InputSchema: Schema = {
-  type: 'object',
-  properties: {
-    commonParams: FieldsSchema,
-    queries: {
-      type: 'array',
-      items: FieldsSchema
-    }
-  }
+export const InputSchema = {
+  commonParams: z.object(FieldsSchema).optional(),
+  queries: z.array(z.object(FieldsSchema))
 }
 
 export type InputType = {
@@ -83,22 +41,8 @@ export type InputType = {
   queries: FieldsType[]
 }
 
-export type OutputFields = Array<Entity>
-
-export type OutputType = {
-  results: Array<OutputFields>
-}
-
-export const OutputSchema: Schema = {
-  type: "object",
-  properties: {
-    results: {
-      type: "array",
-      items: { 
-        type: "array"
-       },
-    }
-  }
+export const OutputSchema ={
+  results: z.array(z.array(z.any())),
 }
 
 
@@ -108,14 +52,19 @@ export function createCatalogQueryAction(options: {
 }) {
   const { catalogClient } = options;
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: CATALOG_QUERY_ID,
     description:
       'Query on catalog',
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema,
+      input: {
+        commonParams: (_) => InputSchema.commonParams,
+        queries: (_) => InputSchema.queries,
+      },
+      output: {
+        results: (_) => OutputSchema.results
+      },
     },
 
     async handler(ctx) {

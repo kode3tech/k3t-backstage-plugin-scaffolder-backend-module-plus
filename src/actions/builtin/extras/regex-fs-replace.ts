@@ -7,76 +7,50 @@ import { examples } from "./regex-fs-replace.examples";
 import globby from 'globby';
 import fs from "node:fs";
 import path from "node:path";
+import z from "zod";
 
 export type FieldsType = {
   glob: string;
   pattern: string;
   replacement: string;
   flags?: string;
-} & JsonObject;
+};
 
-export const FieldsSchema: Schema = {
-  type: 'object',
-  required: ['pattern', 'glob', 'replacement'],
-  properties: {
-    pattern: {
-      title: 'Regex expression',
-      description: 'Regex expression to evaluate in file contents from `file`.',
-      type: 'string',
-    },
-    glob: {
-      title: 'Expression glob to find files to evaluate',
-      description: 'Expression glob to find files to evaluate',
-      type: 'string',
-    },
-    replacement: {
-      title: 'Replace expression',
-      description: 'Replacement expression based on `pattern` field.',
-      type: 'string',
-    },
-    flags: {
-      type: 'string',
-      title: 'Regex flags like d, g, i, m, s, u, v or y',
-      description: "See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags",
-      // default: 'g'
-    }
-},
-}
+export const FieldsSchema = z.object({
+  pattern: z.string({
+    description: 'Regex expression', 
+    message: 'Regex expression to evaluate in file contents from `file`.'
+  }),
+  glob: z.string({
+    description: 'Expression glob to find files to evaluate'
+  }),
+  replacement: z.string({
+    description: 'Replace expression', 
+    message: 'Replacement expression based on `pattern` field.'
+  }),
+  flags: z.string({
+    description: 'Regex flags like d, g, i, m, s, u, v or y', 
+    message: 'See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags'
+  }).optional(),
+})
 
 
-export const InputSchema: Schema = FieldsSchema
+export const InputSchema = FieldsSchema
 
-export type InputType = FieldsType
-
-export type OutputFields = any
-
-export type OutputType = {
-  results: Array<OutputFields>
-}
-
-
-export const OutputSchema: Schema = {
-  type: "object",
-  properties: {
-    results: {
-      type: "array",
-      items: { 
-        type: "object"
-      },
-    }
-  }
-}
+export const OutputSchema = z.object({
+  results: z.array(z.any())
+});
 
 
 
 export function createRegexFsReplaceAction() {
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: REGEX_FS_REPLACE,
     description: 'Provides Regex (ECMAScript Standards) to rewrite files. See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions',
     examples,
     schema: {
-      input: InputSchema,
+      input: FieldsSchema,
       output: OutputSchema,
     },
 

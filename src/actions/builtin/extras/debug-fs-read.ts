@@ -5,74 +5,43 @@ import { DEBUG_FS_READ } from './ids';
 import { examples } from "./parse-repo-url.examples";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import z from "zod";
 
-export type FieldsType = {
-  files: string[];
-  useMainLogger?: boolean;
-} & JsonObject;
+// export type FieldsType = {
+//   files: string[];
+//   useMainLogger?: boolean;
+// } & JsonObject;
 
-export const FieldsSchema: Schema = {
-  type: 'object',
-  required: ['files'],
-  properties: {
-    files: {
-      type: 'array',
-      title: 'Files paths to Read contents from Workspace Path',
-      items: {
-        type: 'string'
-      }
-    }
-  },
+export const InputSchema = {
+  files: z.array(z.string({description: 'Files paths to Read contents from Workspace Path'})),
 }
 
-
-export const InputSchema: Schema = FieldsSchema
-
-export type InputType = FieldsType
-
-export type OutputFields = {
-  file: string;
-  content: string;
+export type InputType = {
+  files: z.infer<typeof InputSchema.files>,
 }
 
-export type OutputType = {
-  results: Array<OutputFields>
+export const OutputSchema = {
+  results: z.array(
+    z.object({
+      file: z.string({description: 'Relative path of the source file'}),
+      content: z.string({description: 'Contents of the source file'}),
+    })
+  ),
 }
-
-
-export const OutputSchema: Schema = {
-  type: "object",
-  properties: {
-    results: {
-      type: "array",
-      items: { 
-        type: "object",
-        properties: {
-          file: {
-            type: 'string',
-            title: 'Relative path of the source file'
-          },
-          content: {
-            type: 'string',
-            title: 'Contents of the source file'
-          }  
-        }
-      },
-    }
-  }
-}
-
-
 
 export function createDebugFsReadAction() {
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: DEBUG_FS_READ,
     description: 'Read file(s) and display',
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema,
+      input: {
+        files: (_) => InputSchema.files,
+      },
+      output: {
+        results: (_) => OutputSchema.results
+      },
     },
 
     async handler(ctx) {

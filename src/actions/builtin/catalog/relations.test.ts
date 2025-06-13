@@ -21,6 +21,8 @@ import { CatalogApi } from '@backstage/catalog-client';
 import { createCatalogQueryAction } from './query';
 import { CATALOG_QUERY_ID } from './ids';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
+import { createCatalogRelationAction } from './relations';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe(`${CATALOG_QUERY_ID}`, () => {
 
@@ -29,11 +31,12 @@ describe(`${CATALOG_QUERY_ID}`, () => {
     addLocation: addLocation,
   };
 
-  const action = createCatalogQueryAction({
-    catalogClient: catalogClient as unknown as CatalogApi,
+  const action = createCatalogRelationAction({
+    discoveryApi: mockServices.discovery(),
   });
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: CATALOG_QUERY_ID},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
@@ -53,9 +56,10 @@ describe(`${CATALOG_QUERY_ID}`, () => {
         ...mockContext,
         input: {
           queries: [{
-            filter: {
-              name: 'test'
-            }
+            relations: [{
+              type: "apiProvidedBy",
+              targetRef: "component/default:customers-service"
+            }],
           }]
         },
       }),

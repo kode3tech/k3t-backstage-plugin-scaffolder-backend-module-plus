@@ -1,46 +1,32 @@
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import { JsonObject } from '@backstage/types';
-import { Schema } from 'jsonschema';
 import { VARS } from './ids';
 import { examples } from "./vars.examples";
+import  z from "zod";
 
-export type FieldsType = JsonObject;
+export type FieldsType = { }
 
-export const FieldsSchema: Schema = {
-  type: 'object',
-}
-
-export const InputSchema: Schema = FieldsSchema
+export const FieldsSchema = z.object({});
 
 export type InputType = FieldsType
 
-export type OutputFields = any
-
-export type OutputType = {
-  result: OutputFields
-}
-
-
-export const OutputSchema: Schema = {
-  type: "object",
-  properties: {
-    result: {
-      title: 'Parsed input param.',
-      type: "object"
-    }
-  }
-}
+export const OutputSchema = z.object({
+  result: z.object({})
+})
 
 export function createVarsAction() {
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: VARS,
     description: 'Proxy template varriables/expressions',
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema,
+      input: {
+
+      },
+      output: {
+        result: (d) => d.object({})
+      }
     },
 
     async handler(ctx) {

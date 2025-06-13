@@ -1,8 +1,9 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from "./parse-repo-url";
+import { InputSchema } from "./parse-repo-url";
 import { PARSE_REPO_URL } from './ids';
+import z from 'zod';
 
 export const examples: TemplateExample[] = [
   {
@@ -15,9 +16,9 @@ export const examples: TemplateExample[] = [
           name: 'Parse Repos URLs',
           input: {
             reposUrls: ['host?owner=any&organization=any&workspace=any&project=any']
-          } as InputType,
-        },
+          } as z.infer<typeof InputSchema>,
+        }
       ],
-    }),
+    })
   },
 ];

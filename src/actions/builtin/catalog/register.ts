@@ -5,38 +5,18 @@ import { examples } from './register.examples';
 import { Schema } from 'jsonschema';
 import { createCatalogRegisterAction } from '@backstage/plugin-scaffolder-backend';
 import { CATALOG_REGISTER_ID } from './ids';
-
+import { z } from 'zod';
 
 export type FieldsType = { catalogInfoUrl: string; optional?: boolean }
 
-export const FieldsSchema: Schema = {
-  type: 'object',
-  required: ['catalogInfoUrl'],
-  properties: {
-    catalogInfoUrl: {
-      title: 'Catalog Info URL',
-      description:
-        'An absolute URL pointing to the catalog info file location',
-      type: 'string',
-    },
-    optional: {
-      title: 'Optional',
-      description:
-        'Permit the registered location to optionally exist. Default: false',
-      type: 'boolean',
-    },
-  },
-}
+export const FieldsSchema = {
+  catalogInfoUrl: z.string({description: 'Catalog Info URL', message: 'An absolute URL pointing to the catalog info file location'}),
+  optional: z.boolean({description: 'Optional', message: 'Permit the registered location to optionally exist. Default: false'}).optional()
+};
 
-export const InputSchema: Schema = {
-  type: 'object',
-  properties: {
-    commonParams: FieldsSchema,
-    infos: {
-      type: 'array',
-      items: FieldsSchema
-    }
-  }
+export const InputSchema = {
+  commonParams: z.object(FieldsSchema).optional(),
+  infos: z.array(z.object(FieldsSchema))
 }
 
 export type InputType = {
@@ -49,28 +29,13 @@ export type OutputFields = {
   catalogInfoUrl?: string,
 }
 
-export type OutputType = {
-  results: OutputFields[]
-}
-
-export const OutputSchema: Schema = {
-  type: 'object',
-  properties: {
-    results: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          entityRef: {
-            type: 'string',
-          },
-          catalogInfoUrl: {
-            type: 'string',
-          },
-        }
-      }
-    }
-  }
+export const OutputSchema = {
+  results: z.array(
+    z.object({
+      entityRef: z.string({description: 'The entity reference of the registered entity.'}),
+      catalogInfoUrl: z.string({description: 'The location of the registered entity.'}),
+    }),
+  )
 }
 
 /**
@@ -83,14 +48,19 @@ export function createCatalogRegisterPlusAction(options: {
 }) {
   const templateAction = createCatalogRegisterAction(options)
 
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: CATALOG_REGISTER_ID,
     description:
       'Registers entities from a catalog descriptor file in the workspace into the software catalog.',
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema
+      input: {
+        commonParams: (_) => InputSchema.commonParams,
+        infos: (_) => InputSchema.infos,
+      },
+      output: {
+        results: (_) => OutputSchema.results
+      },
     },
     async handler(ctx) {
       ctx.logger.info('Registering entities');
@@ -114,17 +84,20 @@ export function createCatalogRegisterPlusAction(options: {
         const { catalogInfoUrl } = input; 
         
         logger.info(`Registering from '${catalogInfoUrl}'...`)
+        
+        logger.info(`WARNING: This function is not implemented yet!`);
 
-        const result: OutputFields = {}
+        // const result: OutputFields = {}
 
-        await templateAction.handler({ 
-          ...ctx, 
-          output: (k, v) => { (result as any)[k] = v},
-          input: {...input}
-        })
-        results.push(result)
+        // await templateAction.handler({ 
+        //   ...ctx, 
+        //   output: (k, v) => { (result as any)[k] = v},
+        //   input: {...input}
+        // })
+        // results.push(result)
+
       }
-      output('results', results)
+      // output('results', results)
     },
   });
 }

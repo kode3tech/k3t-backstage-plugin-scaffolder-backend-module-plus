@@ -45,6 +45,7 @@ describe(`${CATALOG_REGISTER_ID}`, () => {
   });
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: CATALOG_REGISTER_ID},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),

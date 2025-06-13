@@ -6,6 +6,8 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { CATALOG_RELATIONS_ID } from './ids';
 import { Schema } from 'jsonschema';
 import { examples } from './register.examples'
+import z from "zod";
+import { DiscoveryService } from '@backstage/backend-plugin-api';
 
 export type FieldsType = {
   relations: EntityRelation[];
@@ -15,73 +17,20 @@ export type FieldsType = {
   relationType?: string | undefined;
 }
 
-export const FieldsSchema: Schema = {
-  "type": 'object',
-  "required": ['relations'],
-  "properties": {
-    "relations": { 
-      "type": 'array',
-      "title": 'fields',
-      "description": 'fields',
-      "items": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "The type of the relation."
-          },
-          "targetRef": {
-            "type": "string",
-            "description": "The entity ref of the target of this relation."
-          }
-        },
-        "required": ["type", "targetRef"],
-        "additionalProperties": false,
-        "description": "EntityRelation represents a relationship between entities."
-      }
-    },
-    "optional": {
-      "anyOf": [
-        {"type": "boolean"},
-        {"type": "undefined"}
-      ],
-      "description": "Optional flag indicating whether the property is optional."
-    },
-    "defaultKind": {
-      "anyOf": [
-        {"type": "string"},
-        {"type": "undefined"}
-      ],
-      "description": "Default kind for the property."
-    },
-    "defaultNamespace": {
-      "anyOf": [
-        {"type": "string"},
-        {"type": "undefined"}
-      ],
-      "description": "Default namespace for the property."
-    },
-    "relationType": {
-      "anyOf": [
-        {"type": "string"},
-        {"type": "undefined"}
-      ],
-      "description": "Type of relation for the property."
-    }
-  },
-  "additionalProperties": false,
-  "description": "Object representing optional properties for configuration."
+export const FieldsSchema = {
+  relations: z.array(z.object({
+    type: z.string({description: 'The type of the relation.'}),
+    targetRef: z.string({description: 'The entity ref of the target of this relation.'}),
+  })),
+  optional: z.boolean({description: 'Whether or not the field is optional.'}).optional(),
+  defaultKind: z.string({description: 'The default kind to use if none is provided.'}).optional(),
+  defaultNamespace: z.string({description: 'The default namespace to use if none is provided.'}).optional(),
+  relationType: z.string({description: 'Type of relation for the property.'}).optional(),
 }
 
-export const InputSchema: Schema = {
-  type: 'object',
-  properties: {
-    commonParams: FieldsSchema,
-    queries: {
-      type: 'array',
-      items: FieldsSchema
-    }
-  }
+export const InputSchema = {
+  commonParams: z.object(FieldsSchema).optional(),
+  queries: z.array(z.object(FieldsSchema))
 }
 
 export type InputType = {
@@ -95,30 +44,27 @@ export type OutputType = {
   results: Array<OutputFields>
 }
 
-export const OutputSchema: Schema = {
-  type: "object",
-  properties: {
-    results: {
-      type: "array",
-      items: { 
-        type: "array"
-       },
-    }
-  }
+export const OutputSchema = {
+  results: z.array(z.any()),
 }
 
 export function createCatalogRelationAction(options: { 
-  discoveryApi: PluginEndpointDiscovery
+  discoveryApi: DiscoveryService
 }) {
   const catalogClient = new CatalogClient(options)
   
-  return createTemplateAction<InputType, OutputType>({
+  return createTemplateAction({
     id: CATALOG_RELATIONS_ID,
     description: "Get entities from relation spec.",
     examples,
     schema: {
-      input: InputSchema,
-      output: OutputSchema,
+      input: {
+        commonParams: (_) => InputSchema.commonParams,
+        queries: (_) => InputSchema.queries,
+      },
+      output: {
+        results: (_) => OutputSchema.results
+      },
     }, 
     async handler(ctx) {
       ctx.logger.info('Quering entities');

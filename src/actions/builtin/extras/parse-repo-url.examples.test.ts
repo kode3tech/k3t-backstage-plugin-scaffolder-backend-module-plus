@@ -26,6 +26,7 @@ describe(`${PARSE_REPO_URL} examples`, () => {
   });
 
   const mockContext: ActionContext<any, any> = {
+    task: {id: PARSE_REPO_URL},
     input: {},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
