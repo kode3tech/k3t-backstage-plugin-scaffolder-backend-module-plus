@@ -6,7 +6,7 @@ import  z from "zod";
 
 export type FieldsType = { }
 
-export const FieldsSchema = z.object({});
+export const FieldsSchema = z.any();
 
 export type InputType = FieldsType
 
