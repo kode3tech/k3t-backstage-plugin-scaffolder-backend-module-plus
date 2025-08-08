@@ -35,7 +35,7 @@ describe(`${VARS}`, () => {
 
   const mockContext: ActionContext<any, any> = {
     task: {id: VARS},
-    input: {},
+    input: {vars: {}},
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
@@ -53,7 +53,7 @@ describe(`${VARS}`, () => {
       action.handler({
         ...mockContext,
         input: {
-          amount: 3
+          vars: {test: 'hell'}
         },
       }),
     ).rejects.toThrow(

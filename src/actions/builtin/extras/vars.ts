@@ -4,9 +4,11 @@ import { VARS } from './ids';
 import { examples } from "./vars.examples";
 import  z from "zod";
 
-export type FieldsType = { }
+export type FieldsType = { vars: any }
 
-export const FieldsSchema = z.any();
+export const FieldsSchema = z.object({
+  vars: z.any({description: 'Any vars.'})
+});
 
 export type InputType = FieldsType
 
@@ -22,7 +24,7 @@ export function createVarsAction() {
     examples,
     schema: {
       input: {
-
+        vars: (d) => d.any({description: 'Any vars.'}),
       },
       output: {
         result: (d) => d.object({})
@@ -31,7 +33,7 @@ export function createVarsAction() {
 
     async handler(ctx) {
       const { input, output, logger } = ctx
-      logger.info(JSON.stringify(input, undefined, 2));
+      logger.info(JSON.stringify(input.vars, undefined, 2));
       output('result', input)
     }
   });

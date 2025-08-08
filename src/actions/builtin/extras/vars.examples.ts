@@ -14,8 +14,10 @@ export const examples: TemplateExample[] = [
           id: 'reusable-vars',
           name: 'Proxy vars',
           input: {
-            foo: 'my-prefixed-${{ parameters.name | lower }}-foo',
-            bar: 'bar-${{ parameters.value | lower }}'
+            vars: {
+              foo: 'my-prefixed-${{ parameters.name | lower }}-foo',
+              bar: 'bar-${{ parameters.value | lower }}'
+            }
           } as InputType,
         },
       ],
