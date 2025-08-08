@@ -34,7 +34,7 @@ export function createVarsAction() {
     async handler(ctx) {
       const { input, output, logger } = ctx
       logger.info(JSON.stringify(input.vars, undefined, 2));
-      output('result', input)
+      output('result', input.vars)
     }
   });
 }

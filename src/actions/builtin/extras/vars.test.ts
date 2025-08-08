@@ -53,7 +53,7 @@ describe(`${VARS}`, () => {
       action.handler({
         ...mockContext,
         input: {
-          vars: {test: 'hell'}
+          vars: {test: 'hello'}
         },
       }),
     ).rejects.toThrow(
