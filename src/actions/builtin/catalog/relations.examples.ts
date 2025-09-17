@@ -1,7 +1,7 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from "./query";
+import { InputType } from "./relations";
 import { CATALOG_RELATIONS_ID } from './ids';
 
 export const examples: TemplateExample[] = [

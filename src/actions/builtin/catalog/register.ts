@@ -20,8 +20,8 @@ export const InputSchema = {
 }
 
 export type InputType = {
-  commonParams?: Partial<FieldsType>,
-  infos: FieldsType[]
+  commonParams?: z.infer<typeof InputSchema.commonParams>,
+  infos: z.infer<typeof InputSchema.infos>
 }
 
 export type OutputFields = {

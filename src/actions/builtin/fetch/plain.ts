@@ -12,7 +12,7 @@ export type FieldsType = {
 }
 
 
-export const FieldsSchema = z.object({
+export const FieldsSchema = {
   url: z.string({
     description: 'Fetch URL', 
     message: 'Relative path or absolute URL pointing to the directory tree to fetch.'
@@ -21,16 +21,16 @@ export const FieldsSchema = z.object({
     description: 'Target Path',
     message: 'Target path within the working directory to download the contents to.'
   })
-});
+};
 
-export const InputSchema = z.object({
-  commonParams: FieldsSchema.optional(),
-  souces: z.array(FieldsSchema)
-})
+export const InputSchema = {
+  commonParams: z.object(FieldsSchema).optional(),
+  souces: z.array(z.object(FieldsSchema))
+}
 
-export const OutputSchema = z.object({
+export const OutputSchema = {
   results: z.array(z.any())
-})
+}
 
 /**
  * Downloads content and places it in the workspace, or optionally
@@ -50,11 +50,11 @@ export function createFetchPlainPlusAction(options: {
     examples,
     schema: {
       input: {
-        commonParams: (d) => d.object(FieldsSchema.shape).optional(),
-        sources: (d) => d.array(d.object(FieldsSchema.shape))
+        commonParams: (_) => InputSchema.commonParams,
+        sources: (_) => InputSchema.souces
       },
       output: {
-        results: (d) => d.array(d.object({}))
+        results: (_) => OutputSchema.results
       }
     },
     supportsDryRun: true,

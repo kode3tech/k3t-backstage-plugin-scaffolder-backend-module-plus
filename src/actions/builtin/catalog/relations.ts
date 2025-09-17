@@ -32,8 +32,8 @@ export const InputSchema = {
 }
 
 export type InputType = {
-  commonParams?: Partial<FieldsType>,
-  queries: FieldsType[]
+  commonParams?: z.infer<typeof InputSchema.commonParams>,
+  queries: z.infer<typeof InputSchema.queries>
 }
 
 export type OutputFields = Array<Entity | null>
