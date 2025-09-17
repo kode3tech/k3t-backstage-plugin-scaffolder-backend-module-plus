@@ -1,11 +1,9 @@
 
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { CatalogClient } from '@backstage/catalog-client';
 import { Entity, EntityRelation, parseEntityRef, stringifyEntityRef } from '@backstage/catalog-model';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { CATALOG_RELATIONS_ID } from './ids';
-import { Schema } from 'jsonschema';
-import { examples } from './register.examples'
+import { examples } from './relations.examples'
 import z from "zod";
 import { DiscoveryService } from '@backstage/backend-plugin-api';
 
