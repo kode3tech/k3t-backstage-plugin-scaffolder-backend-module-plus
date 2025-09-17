@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.14](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/compare/v1.5.13...v1.5.14) (2025-09-17)
+
+
+### Bug Fixes
+
+* catalog relations example ([185172a](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/commit/185172add35ea9abeee584b4b94be0c627366765))
+
 ### [1.5.13](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/compare/v1.5.12...v1.5.13) (2025-08-08)
 
 ### [1.5.12](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/compare/v1.5.11...v1.5.12) (2025-08-08)
