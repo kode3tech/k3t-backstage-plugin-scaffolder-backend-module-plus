@@ -56,7 +56,7 @@ const integrations = ScmIntegrations.fromConfig(
   const workspacePath = mockDir.resolve('workspace');
 
   const logger = getVoidLogger();
-  const mockContext = (input: any): ActionContext<z.infer<typeof InputSchema>, z.infer<typeof OutputSchema>, any> => ({
+  const mockContext = (input: any) => ({
     task: {id: FETCH_TEMPLATE_ID},
     templateInfo: {
       baseUrl: 'https://base-url',
