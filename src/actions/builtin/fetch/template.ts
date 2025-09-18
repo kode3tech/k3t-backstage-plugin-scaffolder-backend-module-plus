@@ -17,7 +17,7 @@ export type FieldsType = {
   replace: boolean
 }
 
-export const FieldsSchema = z.object({
+export const FieldsSchema = {
   url: z.string({
     description: 'Fetch URL', 
     message: 'Relative path or absolute URL pointing to the directory tree to fetch.'
@@ -26,7 +26,7 @@ export const FieldsSchema = z.object({
     description: 'Target Path',
     message: 'Target path within the working directory to download the contents to.'
   }),
-  values: z.object({}, {
+  values: z.any({
     description: 'Template Values',
     message: 'Values to pass on to the templating engine'
   }),
@@ -54,16 +54,16 @@ export const FieldsSchema = z.object({
     description: 'Replace files',
     message: 'If set, replace files in targetPath instead of skipping existing ones.'
   }).optional(),
-});
+};
 
-export const InputSchema = z.object({
-  commonParams: FieldsSchema.optional(),
-  templates: z.array(FieldsSchema)
-});
+export const InputSchema = {
+  commonParams: z.object(FieldsSchema).optional(),
+  templates: z.array(z.object(FieldsSchema))
+};
 
-export const OutputSchema = z.object({
+export const OutputSchema = {
   results: z.array(z.any())
-});
+};
 
 export function createFetchTemplatePlusAction(options: {
   integrations: ScmIntegrations,
@@ -77,11 +77,11 @@ export function createFetchTemplatePlusAction(options: {
     examples,
     schema: {
       input: {
-        commonParams: (d) => d.object(FieldsSchema.shape).optional(),
-        templates: (d) => d.array(d.object(FieldsSchema.shape))
+        commonParams: (_) => InputSchema.commonParams,
+        templates: (_) => InputSchema.templates
       },
       output: {
-        results: (d) => d.array(d.object({}))
+        results: (_) => OutputSchema.results
       }
     },
     async handler(ctx) {

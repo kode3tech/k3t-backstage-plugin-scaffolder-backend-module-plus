@@ -35,6 +35,8 @@ import { FETCH_TEMPLATE_ID } from './ids';
 import { getRootLogger, getVoidLogger } from '@backstage/backend-common';
 import { UrlReaderService } from '@backstage/backend-plugin-api';
 import z from 'zod';
+import { mockServices } from '@backstage/backend-test-utils';
+import { ConfigReader } from '@backstage/config/index';
 
 // type FetchTemplateInput = InputType;
 
@@ -58,12 +60,29 @@ const mockFetchContents = fetchContents as jest.MockedFunction<
 >;
 
 describe(`${FETCH_TEMPLATE_ID}`, () => {
-  let action: TemplateAction<z.infer<typeof InputSchema>, z.infer<typeof OutputSchema>, 'v2'>;
+  // const integrations = ScmIntegrations.fromConfig(
+  //   new ConfigReader({
+  //     integrations: {
+  //       github: [{ host: 'github.com', token: 'token' }],
+  //     },
+  //   }),
+  // );
+
+  // const reader: UrlReaderService = {
+  //   readUrl: jest.fn(),
+  //   readTree: jest.fn(),
+  //   search: jest.fn(),
+  // };
+
+  // const action = createFetchTemplatePlusAction({
+  //   integrations,
+  //   reader
+  // });
 
   const mockDir = createMockDirectory();
   const workspacePath = mockDir.resolve('workspace');
 
-  const mockContext = (_paramsPatch: Partial<z.infer<typeof InputSchema>> = {}): ActionContext<z.infer<typeof InputSchema>, z.infer<typeof OutputSchema>> => ({
+  const mockContext = (_paramsPatch = {}) => ({
     task: {id: FETCH_TEMPLATE_ID},
     input: {
       
@@ -91,7 +110,7 @@ describe(`${FETCH_TEMPLATE_ID}`, () => {
       return fs.mkdtemp(mockDir.resolve('tmp-'));
     },
   });
-
+  let action: any;
   beforeEach(() => {
     mockDir.setContent({
       workspace: {},
