@@ -7,9 +7,9 @@ import { resolveSafeChildPath, UrlReaderService } from '@backstage/backend-plugi
 import { z } from "zod";
 
 export type FieldsType = {
-  url: string
-  targetPath: string
-  values: any
+  url?: string
+  targetPath?: string
+  values?: any
   copyWithoutRender: string[]
   copyWithoutTemplating: string[]
   cookiecutterCompat: boolean
@@ -21,15 +21,15 @@ export const FieldsSchema = {
   url: z.string({
     description: 'Fetch URL', 
     message: 'Relative path or absolute URL pointing to the directory tree to fetch.'
-  }),
+  }).optional(),
   targetPath: z.string({
     description: 'Target Path',
     message: 'Target path within the working directory to download the contents to.'
-  }),
+  }).optional(),
   values: z.any({
     description: 'Template Values',
     message: 'Values to pass on to the templating engine'
-  }),
+  }).optional(),
   copyWithoutRender: z.array(
     z.string({
       description: '[Deprecated] Copy Without Render',
