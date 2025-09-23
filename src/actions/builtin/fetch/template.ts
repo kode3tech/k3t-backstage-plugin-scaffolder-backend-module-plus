@@ -1,6 +1,6 @@
 
 import { ScmIntegrations } from '@backstage/integration';
-import { createTemplateAction, fetchFile } from '@backstage/plugin-scaffolder-node';
+import { createTemplateAction, fetchContents } from '@backstage/plugin-scaffolder-node';
 import { examples } from './template.examples';
 import { FETCH_TEMPLATE_ID } from './ids';
 import { resolveSafeChildPath, UrlReaderService } from '@backstage/backend-plugin-api';
@@ -108,7 +108,7 @@ export function createFetchTemplatePlusAction(options: {
         // Finally move the template result into the task workspace
         const outputPath = resolveSafeChildPath(ctx.workspacePath, input.targetPath ?? './');
 
-        await fetchFile({
+        await fetchContents({
           reader,
           integrations,
           baseUrl: ctx.templateInfo?.baseUrl,
