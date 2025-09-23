@@ -21,7 +21,7 @@ export type FieldsType = {
 export const FieldsSchema = {
   fields: z.array(z.string()).optional(),
   limit: z.number({description: 'Limit the number of results returned.'}).optional(),
-  filter: z.object({}).optional(),
+  filter: z.any().optional(),
   orderFields: z.object({
     field: z.string(),
     order: z.enum(['asc', 'desc'])
