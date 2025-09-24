@@ -1,12 +1,10 @@
 import { ScmIntegrations } from '@backstage/integration';
-import { CatalogApi } from '@backstage/catalog-client';
-import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import { examples } from './register.examples';
-import { Schema } from 'jsonschema';
-import { createCatalogRegisterAction } from '@backstage/plugin-scaffolder-backend';
-import { CATALOG_REGISTER_ID } from './ids';
-import { z } from 'zod';
 import { CatalogService } from '@backstage/plugin-catalog-node';
+import { createCatalogRegisterAction } from '@backstage/plugin-scaffolder-backend';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
+import { z } from 'zod';
+import { CATALOG_REGISTER_ID } from './ids';
+import { examples } from './register.examples';
 
 export type FieldsType = { catalogInfoUrl: string; optional?: boolean }
 

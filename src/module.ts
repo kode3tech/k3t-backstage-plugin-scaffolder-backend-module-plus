@@ -1,6 +1,7 @@
 import { HostDiscovery } from '@backstage/backend-defaults/discovery';
-import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
+import { coreServices, createBackendModule, createServiceFactory } from '@backstage/backend-plugin-api';
 import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node/alpha';
+
 
 import {
   createCatalogQueryAction,
@@ -36,18 +37,19 @@ export const scaffolderCatalogModule = createBackendModule({
       deps: {
         scaffolderActions: scaffolderActionsExtensionPoint,
         config: coreServices.rootConfig,
-        reader: coreServices.urlReader
+        reader: coreServices.urlReader,
+        catalog: catalogServiceRef,
       },
-      async init({ scaffolderActions, config, reader}) {
+      async init({ scaffolderActions, config, reader, catalog}) {
         const discoveryApi = HostDiscovery.fromConfig(config);
         const catalogClient = new CatalogClient({ discoveryApi });
         const integrations = ScmIntegrations.fromConfig(config);
-      
+
         scaffolderActions.addActions(
           createCatalogQueryAction({catalogClient}),
           createGlobAction(),
           createVarsAction(),
-          createCatalogRegisterPlusAction({catalog: catalogServiceRef.T, integrations}),
+          createCatalogRegisterPlusAction({catalog, integrations}),
           createCatalogRelationAction({discoveryApi}),
           createDebugFsReadAction(),
           createUuidV4GenAction(),
