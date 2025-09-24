@@ -75,104 +75,27 @@ steps:
 ```
 
 
-## fetch:plain:plus
+## fs:rename:plus
 
-### Downloads content and places it in the workspace.
+### Rename specified files 
 
 ```yaml
 steps:
-  - action: fetch:plain:plus
-    id: fetch-plain
-    name: Fetch plain
+  - action: fs:rename:plus
+    id: renameFiles
+    name: Rename files
     input:
       commonParams:
-        targetPath: ./
-      sources:
-        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
-
-```
-
-### Optionally, if you would prefer the data to be downloaded to a subdirectory in the workspace you may specify the ‘targetPath’ input option.
-
-```yaml
-steps:
-  - action: fetch:plain:plus
-    id: fetch-plain
-    name: Fetch plain
-    input:
-      sources:
-        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
-          targetPath: fetched-data
-
-```
-
-
-## fetch:plain:file:plus
-
-### Downloads multiple files and places it in the workspace.
-
-```yaml
-steps:
-  - action: fetch:plain:file:plus
-    id: fetch-plain-file
-    name: Fetch plain file
-    input:
-      commonParams:
-        url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets/Backstage%20Community%20Sessions.png
+        overwrite: true
       files:
-        - targetPath: target-main
-        - targetPath: target-optional
-
-```
-
-
-## fetch:template:plus
-
-### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
-
-```yaml
-steps:
-  - action: fetch:template:plus
-    id: fetch-template
-    name: Fetch template
-    input:
-      commonParams:
-        values:
-          name: test-project
-          count: 1234
-          itemList:
-            - first
-            - second
-            - third
-          showDummyFile: false
-      templates:
-        - url: ./skeleton
-          targetPath: ./
-
-```
-
-### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
-
-```yaml
-steps:
-  - action: fetch:template:plus
-    id: fetch-template
-    name: Fetch template
-    input:
-      commonParams:
-        values:
-          name: test-project
-          count: 1234
-          itemList:
-            - first
-            - second
-            - third
-          showDummyFile: false
-      templates:
-        - url: ./skeleton/main
-          targetPath: ./target-main
-        - url: ./skeleton/optional
-          targetPath: ./target-optional
+        - from: file1.txt
+          to: file1Renamed.txt
+          overwrite: false
+        - from: file2.txt
+          to: file2Renamed.txt
+          overwrite: false
+        - from: file3.txt
+          to: file3Renamed.txt
 
 ```
 
@@ -297,27 +220,104 @@ steps:
 ```
 
 
-## fs:rename:plus
+## fetch:plain:plus
 
-### Rename specified files 
+### Downloads content and places it in the workspace.
 
 ```yaml
 steps:
-  - action: fs:rename:plus
-    id: renameFiles
-    name: Rename files
+  - action: fetch:plain:plus
+    id: fetch-plain
+    name: Fetch plain
     input:
       commonParams:
-        overwrite: true
+        targetPath: ./
+      sources:
+        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
+
+```
+
+### Optionally, if you would prefer the data to be downloaded to a subdirectory in the workspace you may specify the ‘targetPath’ input option.
+
+```yaml
+steps:
+  - action: fetch:plain:plus
+    id: fetch-plain
+    name: Fetch plain
+    input:
+      sources:
+        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
+          targetPath: fetched-data
+
+```
+
+
+## fetch:plain:file:plus
+
+### Downloads multiple files and places it in the workspace.
+
+```yaml
+steps:
+  - action: fetch:plain:file:plus
+    id: fetch-plain-file
+    name: Fetch plain file
+    input:
+      commonParams:
+        url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets/Backstage%20Community%20Sessions.png
       files:
-        - from: file1.txt
-          to: file1Renamed.txt
-          overwrite: false
-        - from: file2.txt
-          to: file2Renamed.txt
-          overwrite: false
-        - from: file3.txt
-          to: file3Renamed.txt
+        - targetPath: target-main
+        - targetPath: target-optional
+
+```
+
+
+## fetch:template:plus
+
+### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
+
+```yaml
+steps:
+  - action: fetch:template:plus
+    id: fetch-template
+    name: Fetch template
+    input:
+      commonParams:
+        values:
+          name: test-project
+          count: 1234
+          itemList:
+            - first
+            - second
+            - third
+          showDummyFile: false
+      templates:
+        - url: ./skeleton
+          targetPath: ./
+
+```
+
+### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
+
+```yaml
+steps:
+  - action: fetch:template:plus
+    id: fetch-template
+    name: Fetch template
+    input:
+      commonParams:
+        values:
+          name: test-project
+          count: 1234
+          itemList:
+            - first
+            - second
+            - third
+          showDummyFile: false
+      templates:
+        - url: ./skeleton/main
+          targetPath: ./target-main
+        - url: ./skeleton/optional
+          targetPath: ./target-optional
 
 ```
 

@@ -5,6 +5,7 @@ import { examples } from './template.examples';
 import { FETCH_TEMPLATE_ID } from './ids';
 import { resolveSafeChildPath, UrlReaderService } from '@backstage/backend-plugin-api';
 import { z } from "zod";
+import { createFetchTemplateAction } from '@backstage/plugin-scaffolder-backend';
 
 export type FieldsType = {
   url?: string
@@ -71,6 +72,7 @@ export function createFetchTemplatePlusAction(options: {
 }) {
   const {reader, integrations} = options;
 
+  const __ = createFetchTemplateAction({integrations, reader});
   return createTemplateAction({
     id: FETCH_TEMPLATE_ID,
     description: "Same from 'fetch:template' for array list.",
@@ -106,16 +108,21 @@ export function createFetchTemplatePlusAction(options: {
         ctx.logger.info('Fetching plain content from remote URL');
 
         // Finally move the template result into the task workspace
-        const outputPath = resolveSafeChildPath(ctx.workspacePath, input.targetPath ?? './');
+        // const outputPath = resolveSafeChildPath(ctx.workspacePath, input.targetPath ?? './');
 
-        await fetchContents({
-          reader,
-          integrations,
-          baseUrl: ctx.templateInfo?.baseUrl,
-          fetchUrl: input.url,
-          outputPath,
-          // token: input.token,
+        await __.handler({
+          ...ctx,
+          input: (input as any),
         });
+
+        // await fetchContents({
+        //   reader,
+        //   integrations,
+        //   baseUrl: ctx.templateInfo?.baseUrl,
+        //   fetchUrl: input.url,
+        //   outputPath,
+        //   // token: input.token,
+        // });
         results.push(result)
       }
       output('results', results)
