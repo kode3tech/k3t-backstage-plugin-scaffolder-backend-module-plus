@@ -1,7 +1,6 @@
 
 import { PassThrough } from 'stream';
 import os from 'os';
-import { getVoidLogger } from '@backstage/backend-common';
 import { CatalogApi } from '@backstage/catalog-client';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
@@ -11,6 +10,7 @@ import { examples } from './register.examples';
 import yaml from 'yaml';
 import { CATALOG_REGISTER_ID } from './ids';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe(`${CATALOG_REGISTER_ID} examples`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -37,8 +37,7 @@ describe(`${CATALOG_REGISTER_ID} examples`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

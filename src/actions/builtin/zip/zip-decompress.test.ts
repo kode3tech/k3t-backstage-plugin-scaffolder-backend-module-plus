@@ -9,10 +9,9 @@ import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
 import { createZipDecompressAction, FieldsType } from './zip-decompress';
-import { PassThrough } from 'stream';
 import { ZIP_DECOMPRESS } from './ids';
 import { UrlReaderService } from '@backstage/backend-plugin-api';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 // import { mockServices } from '@backstage/backend-test-utils';
 
 describe(`${ZIP_DECOMPRESS}`, () => {
@@ -40,8 +39,7 @@ describe(`${ZIP_DECOMPRESS}`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   });

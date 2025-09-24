@@ -1,7 +1,6 @@
 
 import { PassThrough } from 'stream';
 import os from 'os';
-import { getVoidLogger } from '@backstage/backend-common';
 import { CatalogApi } from '@backstage/catalog-client';
 import { createCatalogQueryAction } from './query';
 import { Entity } from '@backstage/catalog-model';
@@ -9,6 +8,7 @@ import { examples } from './query.examples';
 import yaml from 'yaml';
 import { CATALOG_QUERY_ID } from './ids';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe(`${CATALOG_QUERY_ID} examples`, () => {
   const addLocation = jest.fn();
@@ -26,8 +26,7 @@ describe(`${CATALOG_QUERY_ID} examples`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
