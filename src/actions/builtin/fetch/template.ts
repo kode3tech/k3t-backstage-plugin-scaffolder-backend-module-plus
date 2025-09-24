@@ -105,6 +105,8 @@ export function createFetchTemplatePlusAction(options: {
           ...{...(commonParams ?? {}), ...params},
           values
         };
+        
+        ctx.logger.info(JSON.stringify(values));
 
         const { url }  = input;
         ctx.logger.info(`Fetching template from '${url}'...`)
