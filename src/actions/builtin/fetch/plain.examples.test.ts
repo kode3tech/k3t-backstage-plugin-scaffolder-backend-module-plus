@@ -1,15 +1,14 @@
-import yaml from 'yaml';
-import os from 'os';
-import { resolve as resolvePath } from 'path';
-import { getVoidLogger } from '@backstage/backend-common';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { mockServices } from '@backstage/backend-test-utils';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
-import { createFetchPlainPlusAction } from './plain';
-import { PassThrough } from 'stream';
 import { ActionContext, fetchContents } from '@backstage/plugin-scaffolder-node';
-import { examples } from './plain.examples';
+import os from 'os';
+import { resolve as resolvePath } from 'path';
+import yaml from 'yaml';
 import { FETCH_PLAIN_POLY_ID } from './ids';
-import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { createFetchPlainPlusAction } from './plain';
+import { examples } from './plain.examples';
 
 jest.mock('@backstage/plugin-scaffolder-node', () => ({
   ...jest.requireActual('@backstage/plugin-scaffolder-node'),
@@ -41,9 +40,7 @@ describe(`${FETCH_PLAIN_POLY_ID} examples`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    // logger: mockServices.rootLogger.mock(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

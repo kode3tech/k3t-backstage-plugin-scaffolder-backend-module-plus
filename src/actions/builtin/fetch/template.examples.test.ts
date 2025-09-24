@@ -5,24 +5,20 @@ jest.mock('@backstage/plugin-scaffolder-node', () => ({
   fetchContents: jest.fn(),
 }));
 
-import { join as joinPath, sep as pathSep } from 'path';
-import fs from 'fs-extra';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { createMockDirectory, mockServices } from '@backstage/backend-test-utils';
+import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
-import { PassThrough } from 'stream';
-import { createFetchTemplatePlusAction, InputSchema, FieldsType, OutputSchema } from './template';
 import {
   ActionContext,
-  TemplateAction,
   fetchContents,
+  TemplateAction,
 } from '@backstage/plugin-scaffolder-node';
-import { examples } from './template.examples';
+import fs from 'fs-extra';
 import yaml from 'yaml';
-import { createMockDirectory } from '@backstage/backend-test-utils';
 import { FETCH_TEMPLATE_ID } from './ids';
-import { UrlReaderService } from '@backstage/backend-plugin-api';
-import { getVoidLogger } from '@backstage/backend-common';
-import z from 'zod';
-import { ConfigReader } from '@backstage/config';
+import { createFetchTemplatePlusAction } from './template';
+import { examples } from './template.examples';
 
 // const aBinaryFile = fs.readFileSync(
 //   resolvePackagePath(
@@ -55,7 +51,6 @@ const integrations = ScmIntegrations.fromConfig(
   const mockDir = createMockDirectory();
   const workspacePath = mockDir.resolve('workspace');
 
-  const logger = getVoidLogger();
   const mockContext = (input: any) => ({
     task: {id: FETCH_TEMPLATE_ID},
     templateInfo: {
@@ -66,8 +61,7 @@ const integrations = ScmIntegrations.fromConfig(
     getInitiatorCredentials: jest.fn(),
     input: input,
     output: jest.fn(),
-    logStream: new PassThrough(),
-    logger,
+    logger: mockServices.logger.mock(),
     workspacePath,
 
     async createTemporaryDirectory() {

@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import { createMockDirectory, mockServices } from '@backstage/backend-test-utils';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
-import fs from 'fs-extra';
 import { resolve as resolvePath } from 'path';
-import { PassThrough } from 'stream';
 import yaml from 'yaml';
 import { FS_RENAME_PLURI_ID } from './ids';
 import { createFilesystemRenamePlusAction } from './rename';
@@ -40,8 +38,7 @@ describe(`${FS_RENAME_PLURI_ID} examples`, () => {
     workspacePath,
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
-    logger: {} as any,
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

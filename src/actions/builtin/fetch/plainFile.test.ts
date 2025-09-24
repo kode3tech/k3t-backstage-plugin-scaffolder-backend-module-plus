@@ -19,16 +19,15 @@ jest.mock('@backstage/plugin-scaffolder-node', () => {
   return { ...actual, fetchFile: jest.fn() };
 });
 
-import os from 'os';
-import { resolve as resolvePath } from 'path';
-import { getVoidLogger } from '@backstage/backend-common';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { mockServices } from '@backstage/backend-test-utils';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import { ActionContext, fetchFile } from '@backstage/plugin-scaffolder-node';
-import { createFetchPlainFilePlusAction } from './plainFile';
-import { PassThrough } from 'stream';
+import os from 'os';
+import { resolve as resolvePath } from 'path';
 import { FETCH_PLAIN_FILE_ID } from './ids';
-import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { createFetchPlainFilePlusAction } from './plainFile';
 
 describe(`${FETCH_PLAIN_FILE_ID}`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -55,8 +54,7 @@ describe(`${FETCH_PLAIN_FILE_ID}`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

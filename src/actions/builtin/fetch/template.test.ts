@@ -19,24 +19,17 @@ jest.mock('@backstage/plugin-scaffolder-node', () => {
   return { ...actual, fetchContents: jest.fn() };
 });
 
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { createMockDirectory, mockServices } from '@backstage/backend-test-utils';
 import { ScmIntegrations } from '@backstage/integration';
 import {
-  ActionContext,
-  TemplateAction,
-  fetchContents,
+  fetchContents
 } from '@backstage/plugin-scaffolder-node';
 import fs from 'fs-extra';
 import { resolve } from "node:path";
-import { join as joinPath, sep as pathSep } from 'path';
 import { PassThrough } from 'stream';
-import { FieldsType, createFetchTemplatePlusAction, InputSchema, OutputSchema, FieldsSchema } from './template';
 import { FETCH_TEMPLATE_ID } from './ids';
-import { getRootLogger, getVoidLogger } from '@backstage/backend-common';
-import { UrlReaderService } from '@backstage/backend-plugin-api';
-import z from 'zod';
-import { mockServices } from '@backstage/backend-test-utils';
-import { ConfigReader } from '@backstage/config/index';
+import { createFetchTemplatePlusAction } from './template';
 
 // type FetchTemplateInput = InputType;
 
@@ -99,7 +92,7 @@ describe(`${FETCH_TEMPLATE_ID}`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath,
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     templateInfo: {
       baseUrl: 'base-url',
       entityRef: 'template:default/test-template',
