@@ -75,108 +75,6 @@ steps:
 ```
 
 
-## fetch:plain:plus
-
-### Downloads content and places it in the workspace.
-
-```yaml
-steps:
-  - action: fetch:plain:plus
-    id: fetch-plain
-    name: Fetch plain
-    input:
-      commonParams:
-        targetPath: ./
-      sources:
-        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
-
-```
-
-### Optionally, if you would prefer the data to be downloaded to a subdirectory in the workspace you may specify the ‘targetPath’ input option.
-
-```yaml
-steps:
-  - action: fetch:plain:plus
-    id: fetch-plain
-    name: Fetch plain
-    input:
-      sources:
-        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
-          targetPath: fetched-data
-
-```
-
-
-## fetch:plain:file:plus
-
-### Downloads multiple files and places it in the workspace.
-
-```yaml
-steps:
-  - action: fetch:plain:file:plus
-    id: fetch-plain-file
-    name: Fetch plain file
-    input:
-      commonParams:
-        url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets/Backstage%20Community%20Sessions.png
-      files:
-        - targetPath: target-main
-        - targetPath: target-optional
-
-```
-
-
-## fetch:template:plus
-
-### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
-
-```yaml
-steps:
-  - action: fetch:template:plus
-    id: fetch-template
-    name: Fetch template
-    input:
-      commonParams:
-        values:
-          name: test-project
-          count: 1234
-          itemList:
-            - first
-            - second
-            - third
-          showDummyFile: false
-      templates:
-        - url: ./skeleton
-          targetPath: ./
-
-```
-
-### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
-
-```yaml
-steps:
-  - action: fetch:template:plus
-    id: fetch-template
-    name: Fetch template
-    input:
-      commonParams:
-        values:
-          name: test-project
-          count: 1234
-          itemList:
-            - first
-            - second
-            - third
-          showDummyFile: false
-      templates:
-        - url: ./skeleton/main
-          targetPath: ./target-main
-        - url: ./skeleton/optional
-          targetPath: ./target-optional
-
-```
-
-
 ## debug:fs:read:plus
 
 ### Debug read files in log stream
@@ -318,6 +216,108 @@ steps:
           overwrite: false
         - from: file3.txt
           to: file3Renamed.txt
+
+```
+
+
+## fetch:plain:plus
+
+### Downloads content and places it in the workspace.
+
+```yaml
+steps:
+  - action: fetch:plain:plus
+    id: fetch-plain
+    name: Fetch plain
+    input:
+      commonParams:
+        targetPath: ./
+      sources:
+        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
+
+```
+
+### Optionally, if you would prefer the data to be downloaded to a subdirectory in the workspace you may specify the ‘targetPath’ input option.
+
+```yaml
+steps:
+  - action: fetch:plain:plus
+    id: fetch-plain
+    name: Fetch plain
+    input:
+      sources:
+        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
+          targetPath: fetched-data
+
+```
+
+
+## fetch:plain:file:plus
+
+### Downloads multiple files and places it in the workspace.
+
+```yaml
+steps:
+  - action: fetch:plain:file:plus
+    id: fetch-plain-file
+    name: Fetch plain file
+    input:
+      commonParams:
+        url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets/Backstage%20Community%20Sessions.png
+      files:
+        - targetPath: target-main
+        - targetPath: target-optional
+
+```
+
+
+## fetch:template:plus
+
+### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
+
+```yaml
+steps:
+  - action: fetch:template:plus
+    id: fetch-template
+    name: Fetch template
+    input:
+      commonParams:
+        values:
+          name: test-project
+          count: 1234
+          itemList:
+            - first
+            - second
+            - third
+          showDummyFile: false
+      templates:
+        - url: ./skeleton
+          targetPath: ./
+
+```
+
+### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
+
+```yaml
+steps:
+  - action: fetch:template:plus
+    id: fetch-template
+    name: Fetch template
+    input:
+      commonParams:
+        values:
+          name: test-project
+          count: 1234
+          itemList:
+            - first
+            - second
+            - third
+          showDummyFile: false
+      templates:
+        - url: ./skeleton/main
+          targetPath: ./target-main
+        - url: ./skeleton/optional
+          targetPath: ./target-optional
 
 ```
 

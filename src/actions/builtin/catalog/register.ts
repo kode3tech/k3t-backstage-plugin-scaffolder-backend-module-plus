@@ -91,7 +91,7 @@ export function createCatalogRegisterPlusAction(options: {
         await __.handler({ 
           ...ctx, 
           output: (k, v) => { (result as any)[k] = v},
-          input: {...input}
+          input: {...input} as any
         })
         results.push(result)
 
