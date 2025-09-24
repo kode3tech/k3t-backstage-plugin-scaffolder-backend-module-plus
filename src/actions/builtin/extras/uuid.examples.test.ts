@@ -1,13 +1,12 @@
 
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { Entity } from '@backstage/catalog-model';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 import os from 'os';
-import { PassThrough } from 'stream';
 import yaml from 'yaml';
+import { UUID_V4_GEN } from './ids';
 import { createUuidV4GenAction } from './uuid';
 import { examples } from './uuid.examples';
-import { UUID_V4_GEN } from './ids';
-import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${UUID_V4_GEN} examples`, () => {
   const addLocation = jest.fn();
@@ -19,8 +18,7 @@ describe(`${UUID_V4_GEN} examples`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

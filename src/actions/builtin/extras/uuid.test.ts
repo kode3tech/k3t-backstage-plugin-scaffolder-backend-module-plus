@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
-import os from 'os';
-import { PassThrough } from 'stream';
-import { createUuidV4GenAction } from './uuid';
-import { UUID_V4_GEN } from './ids';
+import { mockServices } from '@backstage/backend-test-utils';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
+import os from 'os';
+import { UUID_V4_GEN } from './ids';
+import { createUuidV4GenAction } from './uuid';
 
 describe(`${UUID_V4_GEN}`, () => {
 
@@ -39,8 +38,7 @@ describe(`${UUID_V4_GEN}`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

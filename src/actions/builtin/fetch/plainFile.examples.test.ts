@@ -21,18 +21,14 @@ jest.mock('@backstage/plugin-scaffolder-node', () => {
   return { ...actual, fetchFile: jest.fn() };
 });
 
-import yaml from 'yaml';
-import os from 'os';
-import { resolve as resolvePath } from 'path';
-import { getVoidLogger } from '@backstage/backend-common';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
-import { createFetchPlainFilePlusAction } from './plainFile';
-import { PassThrough } from 'stream';
-import { ActionContext, fetchFile } from '@backstage/plugin-scaffolder-node';
-import { examples } from './plainFile.examples';
+import { fetchFile } from '@backstage/plugin-scaffolder-node';
+import yaml from 'yaml';
 import { FETCH_PLAIN_FILE_ID } from './ids';
-import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { createFetchPlainFilePlusAction } from './plainFile';
+import { examples } from './plainFile.examples';
 
 describe(`${FETCH_PLAIN_FILE_ID} examples`, () => {
   const integrations = ScmIntegrations.fromConfig(
