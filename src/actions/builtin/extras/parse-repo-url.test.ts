@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 import os from 'os';
-import { PassThrough } from 'stream';
 import { PARSE_REPO_URL } from './ids';
 import { createParseRepoUrlAction } from './parse-repo-url';
-import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${PARSE_REPO_URL}`, () => {
 
@@ -43,8 +42,7 @@ describe(`${PARSE_REPO_URL}`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

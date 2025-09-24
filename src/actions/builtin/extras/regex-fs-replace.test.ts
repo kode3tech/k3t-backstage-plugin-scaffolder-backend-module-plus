@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
-import os from 'os';
-import { PassThrough } from 'stream';
-import { createRegexFsReplaceAction } from './regex-fs-replace';
-import { REGEX_FS_REPLACE } from './ids';
+import { mockServices } from '@backstage/backend-test-utils';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
+import os from 'os';
+import { REGEX_FS_REPLACE } from './ids';
+import { createRegexFsReplaceAction } from './regex-fs-replace';
 
 describe(`${REGEX_FS_REPLACE}`, () => {
 
@@ -39,8 +38,7 @@ describe(`${REGEX_FS_REPLACE}`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
