@@ -22,6 +22,7 @@ import { CatalogClient } from '@backstage/catalog-client';
 import {
   ScmIntegrations,
 } from '@backstage/integration';
+import { catalogServiceRef } from '@backstage/plugin-catalog-node';
 
 
 /**
@@ -46,7 +47,7 @@ export const scaffolderCatalogModule = createBackendModule({
           createCatalogQueryAction({catalogClient}),
           createGlobAction(),
           createVarsAction(),
-          createCatalogRegisterPlusAction({catalogClient, integrations}),
+          createCatalogRegisterPlusAction({catalog: catalogServiceRef.T, integrations}),
           createCatalogRelationAction({discoveryApi}),
           createDebugFsReadAction(),
           createUuidV4GenAction(),

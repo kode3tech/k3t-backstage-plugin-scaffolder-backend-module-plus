@@ -11,6 +11,7 @@ import yaml from 'yaml';
 import { CATALOG_REGISTER_ID } from './ids';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
 import { mockServices } from '@backstage/backend-test-utils';
+import { CatalogService, catalogServiceRef } from '@backstage/plugin-catalog-node';
 
 describe(`${CATALOG_REGISTER_ID} examples`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -28,7 +29,7 @@ describe(`${CATALOG_REGISTER_ID} examples`, () => {
 
   const action = createCatalogRegisterPlusAction({
     integrations,
-    catalogClient: catalogClient as unknown as CatalogApi,
+    catalog: catalogServiceRef.T
   });
 
   const mockContext: ActionContext<any, any> = {

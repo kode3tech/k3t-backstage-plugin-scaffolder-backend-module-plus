@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import { PassThrough } from 'stream';
-import os from 'os';
-import { CatalogApi } from '@backstage/catalog-client';
+import { mockServices } from '@backstage/backend-test-utils';
+import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
-import { createCatalogRegisterPlusAction } from './register';
-import { Entity } from '@backstage/catalog-model';
-import { CATALOG_REGISTER_ID } from './ids';
+import { catalogServiceRef } from '@backstage/plugin-catalog-node';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
-import { mockServices } from '@backstage/backend-test-utils';
+import os from 'os';
+import { CATALOG_REGISTER_ID } from './ids';
+import { createCatalogRegisterPlusAction } from './register';
 
 describe(`${CATALOG_REGISTER_ID}`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -41,7 +40,7 @@ describe(`${CATALOG_REGISTER_ID}`, () => {
 
   const action = createCatalogRegisterPlusAction({
     integrations,
-    catalogClient: catalogClient as unknown as CatalogApi,
+    catalog: catalogServiceRef.T
   });
 
   const mockContext: ActionContext<any, any> = {
