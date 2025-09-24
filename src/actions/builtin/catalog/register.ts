@@ -9,7 +9,7 @@ import { examples } from './register.examples';
 export type FieldsType = { catalogInfoUrl: string; optional?: boolean }
 
 export const FieldsSchema = {
-  catalogInfoUrl: z.string({description: 'Catalog Info URL', message: 'An absolute URL pointing to the catalog info file location'}),
+  catalogInfoUrl: z.string({description: 'Catalog Info URL', message: 'An absolute URL pointing to the catalog info file location'}).optional(),
   optional: z.boolean({description: 'Optional', message: 'Permit the registered location to optionally exist. Default: false'}).optional()
 };
 
