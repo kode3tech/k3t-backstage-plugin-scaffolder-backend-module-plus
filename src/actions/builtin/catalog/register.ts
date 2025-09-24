@@ -6,6 +6,7 @@ import { Schema } from 'jsonschema';
 import { createCatalogRegisterAction } from '@backstage/plugin-scaffolder-backend';
 import { CATALOG_REGISTER_ID } from './ids';
 import { z } from 'zod';
+import { CatalogService } from '@backstage/plugin-catalog-node';
 
 export type FieldsType = { catalogInfoUrl: string; optional?: boolean }
 
@@ -43,10 +44,10 @@ export const OutputSchema = {
  * @public
  */
 export function createCatalogRegisterPlusAction(options: {
-  catalogClient: CatalogApi;
+  catalog: CatalogService;
   integrations: ScmIntegrations;
 }) {
-  const templateAction = createCatalogRegisterAction(options)
+  const __ = createCatalogRegisterAction(options)
 
   return createTemplateAction({
     id: CATALOG_REGISTER_ID,
@@ -87,17 +88,17 @@ export function createCatalogRegisterPlusAction(options: {
         
         logger.info(`WARNING: This function is not implemented yet!`);
 
-        // const result: OutputFields = {}
+        const result: OutputFields = {}
 
-        // await templateAction.handler({ 
-        //   ...ctx, 
-        //   output: (k, v) => { (result as any)[k] = v},
-        //   input: {...input}
-        // })
-        // results.push(result)
+        await __.handler({ 
+          ...ctx, 
+          output: (k, v) => { (result as any)[k] = v},
+          input: {...input}
+        })
+        results.push(result)
 
       }
-      // output('results', results)
+      output('results', results as  any)
     },
   });
 }

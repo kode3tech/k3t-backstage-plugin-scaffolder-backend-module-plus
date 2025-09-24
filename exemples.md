@@ -1,207 +1,4 @@
 
-## catalog:query:plus
-
-### Query in catalog
-
-```yaml
-steps:
-  - action: catalog:query:plus
-    id: query-in-catalog
-    name: Query in catalog
-    input:
-      queries:
-        - limit: 2
-          fields:
-            - metadata.name
-          filter:
-            metadata.annotations.backstage.io/template-origin: template:default/java-api
-            relations.dependsOn: ${{ parameters.component_ref }}
-
-```
-
-
-## catalog:register:plus
-
-### Register with the catalog
-
-```yaml
-steps:
-  - action: catalog:register:plus
-    id: register-with-catalog
-    name: Register with the catalog
-    input:
-      infos:
-        - catalogInfoUrl: http://github.com/backstage/backstage/blob/master/catalog-info.yaml
-
-```
-
-### Register with the catalog
-
-```yaml
-steps:
-  - action: catalog:register:plus
-    id: register-with-catalog
-    name: Register with the catalog
-    input:
-      commonParams:
-        optional: true
-      infos:
-        - catalogInfoUrl: http://github.com/backstage/backstage/blob/master/catalog-info.yaml
-          optional: false
-        - catalogInfoUrl: http://github.com/backstage/backstage/blob/master/catalog-info-two.yaml
-
-```
-
-
-## catalog:relation:plus
-
-### Query in relations
-
-```yaml
-steps:
-  - action: catalog:relation:plus
-    id: query-in-relations
-    name: Query in relations
-    input:
-      queries:
-        - relations:
-            - type: apiProvidedBy
-              targetRef: component/default:customers-service
-            - type: ownedBy
-              targetRef: group/default:dream-devs
-          optional: true
-          relationType: apiProvidedBy
-
-```
-
-
-## fetch:plain:plus
-
-### Downloads content and places it in the workspace.
-
-```yaml
-steps:
-  - action: fetch:plain:plus
-    id: fetch-plain
-    name: Fetch plain
-    input:
-      commonParams:
-        targetPath: ./
-      sources:
-        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
-
-```
-
-### Optionally, if you would prefer the data to be downloaded to a subdirectory in the workspace you may specify the ‘targetPath’ input option.
-
-```yaml
-steps:
-  - action: fetch:plain:plus
-    id: fetch-plain
-    name: Fetch plain
-    input:
-      sources:
-        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
-          targetPath: fetched-data
-
-```
-
-
-## fetch:plain:file:plus
-
-### Downloads multiple files and places it in the workspace.
-
-```yaml
-steps:
-  - action: fetch:plain:file:plus
-    id: fetch-plain-file
-    name: Fetch plain file
-    input:
-      commonParams:
-        url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets/Backstage%20Community%20Sessions.png
-      files:
-        - targetPath: target-main
-        - targetPath: target-optional
-
-```
-
-
-## fetch:template:plus
-
-### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
-
-```yaml
-steps:
-  - action: fetch:template:plus
-    id: fetch-template
-    name: Fetch template
-    input:
-      commonParams:
-        values:
-          name: test-project
-          count: 1234
-          itemList:
-            - first
-            - second
-            - third
-          showDummyFile: false
-      templates:
-        - url: ./skeleton
-          targetPath: ./
-
-```
-
-### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
-
-```yaml
-steps:
-  - action: fetch:template:plus
-    id: fetch-template
-    name: Fetch template
-    input:
-      commonParams:
-        values:
-          name: test-project
-          count: 1234
-          itemList:
-            - first
-            - second
-            - third
-          showDummyFile: false
-      templates:
-        - url: ./skeleton/main
-          targetPath: ./target-main
-        - url: ./skeleton/optional
-          targetPath: ./target-optional
-
-```
-
-
-## fs:rename:plus
-
-### Rename specified files 
-
-```yaml
-steps:
-  - action: fs:rename:plus
-    id: renameFiles
-    name: Rename files
-    input:
-      commonParams:
-        overwrite: true
-      files:
-        - from: file1.txt
-          to: file1Renamed.txt
-          overwrite: false
-        - from: file2.txt
-          to: file2Renamed.txt
-          overwrite: false
-        - from: file3.txt
-          to: file3Renamed.txt
-
-```
-
-
 ## debug:fs:read:plus
 
 ### Debug read files in log stream
@@ -318,6 +115,209 @@ steps:
       vars:
         foo: my-prefixed-${{ parameters.name | lower }}-foo
         bar: bar-${{ parameters.value | lower }}
+
+```
+
+
+## catalog:query:plus
+
+### Query in catalog
+
+```yaml
+steps:
+  - action: catalog:query:plus
+    id: query-in-catalog
+    name: Query in catalog
+    input:
+      queries:
+        - limit: 2
+          fields:
+            - metadata.name
+          filter:
+            metadata.annotations.backstage.io/template-origin: template:default/java-api
+            relations.dependsOn: ${{ parameters.component_ref }}
+
+```
+
+
+## catalog:register:plus
+
+### Register with the catalog
+
+```yaml
+steps:
+  - action: catalog:register:plus
+    id: register-with-catalog
+    name: Register with the catalog
+    input:
+      infos:
+        - catalogInfoUrl: http://github.com/backstage/backstage/blob/master/catalog-info.yaml
+
+```
+
+### Register with the catalog
+
+```yaml
+steps:
+  - action: catalog:register:plus
+    id: register-with-catalog
+    name: Register with the catalog
+    input:
+      commonParams:
+        optional: true
+      infos:
+        - catalogInfoUrl: http://github.com/backstage/backstage/blob/master/catalog-info.yaml
+          optional: false
+        - catalogInfoUrl: http://github.com/backstage/backstage/blob/master/catalog-info-two.yaml
+
+```
+
+
+## catalog:relation:plus
+
+### Query in relations
+
+```yaml
+steps:
+  - action: catalog:relation:plus
+    id: query-in-relations
+    name: Query in relations
+    input:
+      queries:
+        - relations:
+            - type: apiProvidedBy
+              targetRef: component/default:customers-service
+            - type: ownedBy
+              targetRef: group/default:dream-devs
+          optional: true
+          relationType: apiProvidedBy
+
+```
+
+
+## fs:rename:plus
+
+### Rename specified files 
+
+```yaml
+steps:
+  - action: fs:rename:plus
+    id: renameFiles
+    name: Rename files
+    input:
+      commonParams:
+        overwrite: true
+      files:
+        - from: file1.txt
+          to: file1Renamed.txt
+          overwrite: false
+        - from: file2.txt
+          to: file2Renamed.txt
+          overwrite: false
+        - from: file3.txt
+          to: file3Renamed.txt
+
+```
+
+
+## fetch:plain:plus
+
+### Downloads content and places it in the workspace.
+
+```yaml
+steps:
+  - action: fetch:plain:plus
+    id: fetch-plain
+    name: Fetch plain
+    input:
+      commonParams:
+        targetPath: ./
+      sources:
+        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
+
+```
+
+### Optionally, if you would prefer the data to be downloaded to a subdirectory in the workspace you may specify the ‘targetPath’ input option.
+
+```yaml
+steps:
+  - action: fetch:plain:plus
+    id: fetch-plain
+    name: Fetch plain
+    input:
+      sources:
+        - url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets
+          targetPath: fetched-data
+
+```
+
+
+## fetch:plain:file:plus
+
+### Downloads multiple files and places it in the workspace.
+
+```yaml
+steps:
+  - action: fetch:plain:file:plus
+    id: fetch-plain-file
+    name: Fetch plain file
+    input:
+      commonParams:
+        url: https://github.com/backstage/community/tree/main/backstage-community-sessions/assets/Backstage%20Community%20Sessions.png
+      files:
+        - targetPath: target-main
+        - targetPath: target-optional
+
+```
+
+
+## fetch:template:plus
+
+### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
+
+```yaml
+steps:
+  - action: fetch:template:plus
+    id: fetch-template
+    name: Fetch template
+    input:
+      commonParams:
+        values:
+          name: test-project
+          count: 1234
+          itemList:
+            - first
+            - second
+            - third
+          showDummyFile: false
+      templates:
+        - url: ./skeleton
+          targetPath: ./
+
+```
+
+### Downloads multiple skeleton directories that lives alongside the template file and fill it out with common values.
+
+```yaml
+steps:
+  - action: fetch:template:plus
+    id: fetch-template
+    name: Fetch template
+    input:
+      commonParams:
+        values:
+          name: test-project
+          count: 1234
+          itemList:
+            - first
+            - second
+            - third
+          showDummyFile: false
+      templates:
+        - url: ./skeleton/main
+          targetPath: ./target-main
+        - url: ./skeleton/optional
+          targetPath: ./target-optional
 
 ```
 
