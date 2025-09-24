@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 import os from 'os';
-import { PassThrough } from 'stream';
 import { createGlobAction } from './glob';
 import { GLOB } from './ids';
-import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${GLOB}`, () => {
 
@@ -39,8 +38,7 @@ describe(`${GLOB}`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

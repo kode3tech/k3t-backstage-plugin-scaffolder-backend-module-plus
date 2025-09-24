@@ -1,15 +1,14 @@
 
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
+import { ActionContext } from '@backstage/plugin-scaffolder-node';
 import os from 'os';
-import { PassThrough } from 'stream';
 import yaml from 'yaml';
 import { PARSE_REPO_URL } from './ids';
 import { createParseRepoUrlAction } from './parse-repo-url';
 import { examples } from './parse-repo-url.examples';
-import { ActionContext } from '@backstage/plugin-scaffolder-node';
 
 describe(`${PARSE_REPO_URL} examples`, () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -31,8 +30,7 @@ describe(`${PARSE_REPO_URL} examples`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
