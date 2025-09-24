@@ -55,6 +55,10 @@ export const FieldsSchema = {
     description: 'Replace files',
     message: 'If set, replace files in targetPath instead of skipping existing ones.'
   }).optional(),
+  ignoreErrors: z.boolean({
+    description: 'Not throw error',
+    message: 'If set, errors during process will be ignored.'
+  }).optional(),
 };
 
 export const InputSchema = {
@@ -116,20 +120,16 @@ export function createFetchTemplatePlusAction(options: {
 
         // Finally move the template result into the task workspace
         // const outputPath = resolveSafeChildPath(ctx.workspacePath, input.targetPath ?? './');
+        try {
+          await __.handler({
+            ...ctx,
+            input: (input as any),
+          });
+        } catch (error) {
+          if(input.ignoreErrors) continue;
+          throw error;
+        }
 
-        await __.handler({
-          ...ctx,
-          input: (input as any),
-        });
-
-        // await fetchContents({
-        //   reader,
-        //   integrations,
-        //   baseUrl: ctx.templateInfo?.baseUrl,
-        //   fetchUrl: input.url,
-        //   outputPath,
-        //   // token: input.token,
-        // });
         results.push(result)
       }
       output('results', results)
