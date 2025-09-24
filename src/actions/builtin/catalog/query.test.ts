@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import { PassThrough } from 'stream';
-import os from 'os';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { CatalogApi } from '@backstage/catalog-client';
-import { createCatalogQueryAction } from './query';
-import { CATALOG_QUERY_ID } from './ids';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
+import os from 'os';
+import { CATALOG_QUERY_ID } from './ids';
+import { createCatalogQueryAction } from './query';
 
 describe(`${CATALOG_QUERY_ID}`, () => {
 
@@ -39,8 +38,7 @@ describe(`${CATALOG_QUERY_ID}`, () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: os.tmpdir(),
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
+    logger: mockServices.logger.mock(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
