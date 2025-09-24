@@ -1,9 +1,9 @@
 
 import { mockServices } from '@backstage/backend-test-utils';
-import { CatalogApi } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
+import { catalogServiceRef } from '@backstage/plugin-catalog-node';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
 import os from 'os';
 import yaml from 'yaml';
@@ -21,13 +21,10 @@ describe(`${CATALOG_RELATIONS_ID} examples`, () => {
   );
 
   const addLocation = jest.fn();
-  const catalogClient = {
-    addLocation: addLocation,
-  };
 
   const action = createCatalogRegisterPlusAction({
     integrations,
-    catalogClient: catalogClient as unknown as CatalogApi,
+    catalog: catalogServiceRef.T
   });
 
   const mockContext: ActionContext<any, any> = {
