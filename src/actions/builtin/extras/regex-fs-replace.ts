@@ -16,7 +16,7 @@ export type FieldsType = {
   flags?: string;
 };
 
-export const FieldsSchema = z.object({
+export const FieldsSchema: Record<string, any> = {
   pattern: z.string({
     description: 'Regex expression', 
     message: 'Regex expression to evaluate in file contents from `file`.'
@@ -32,14 +32,14 @@ export const FieldsSchema = z.object({
     description: 'Regex flags like d, g, i, m, s, u, v or y', 
     message: 'See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#advanced_searching_with_flags'
   }).optional(),
-})
+}
 
 
 export const InputSchema = FieldsSchema
 
-export const OutputSchema = z.object({
+export const OutputSchema: Record<string, any> = {
   results: z.array(z.any())
-});
+};
 
 
 
