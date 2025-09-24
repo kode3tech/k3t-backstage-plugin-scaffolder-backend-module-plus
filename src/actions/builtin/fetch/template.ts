@@ -97,10 +97,15 @@ export function createFetchTemplatePlusAction(options: {
       
       const results = [];
 
-      for (const value of templates) {
+      for (const params of templates) {
+        const values = {
+          ...{...(commonParams?.values ?? {}), ...(params?.values ?? {})}
+        };
         const input = {
-          ...{...(commonParams ?? {}), ...value}
-        }
+          ...{...(commonParams ?? {}), ...params},
+          values
+        };
+
         const { url }  = input;
         ctx.logger.info(`Fetching template from '${url}'...`)
 
