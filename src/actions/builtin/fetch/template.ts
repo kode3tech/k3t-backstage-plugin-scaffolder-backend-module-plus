@@ -105,9 +105,12 @@ export function createFetchTemplatePlusAction(options: {
         const values = {
           ...{...(commonParams?.values ?? {}), ...(params?.values ?? {})}
         };
+        const targetPath = (commonParams?.targetPath || params?.targetPath || '').replace(/[\n\r]+/g, '');
+        
         const input = {
           ...{...(commonParams ?? {}), ...params},
-          values
+          values,
+          targetPath
         };
         
         ctx.logger.info(JSON.stringify(values));

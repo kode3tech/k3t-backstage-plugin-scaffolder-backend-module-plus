@@ -89,6 +89,8 @@ export function createFetchPlainFilePlusAction(options: {
         const input = {
           ...{...(commonParams ?? {}), ...file}
         }
+        const targetPath = input.targetPath.replace(/[\n\r]+/g, '');
+
         const { url }  = input;
         logger.info(`Fetching template from '${url}'...`)
 
@@ -98,7 +100,7 @@ export function createFetchPlainFilePlusAction(options: {
         // Finally move the template result into the task workspace
         const outputPath = resolveSafeChildPath(
           ctx.workspacePath,
-          input.targetPath,
+          targetPath,
         );
 
         await fetchFile({

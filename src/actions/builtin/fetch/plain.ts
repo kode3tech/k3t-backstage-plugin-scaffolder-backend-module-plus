@@ -76,6 +76,8 @@ export function createFetchPlainPlusAction(options: {
         const input = {
           ...{...(commonParams ?? {}), ...source}
         }
+        const targetPath = input.targetPath.replace(/[\n\r]+/g, '');
+
         const { url }  = input;
         ctx.logger.info(`Fetching pain from '${url}'...`)
 
@@ -83,7 +85,7 @@ export function createFetchPlainPlusAction(options: {
         ctx.logger.info('Fetching plain content from remote URL');
 
         // Finally move the template result into the task workspace
-        const outputPath = resolveSafeChildPath(ctx.workspacePath, input.targetPath ?? './');
+        const outputPath = resolveSafeChildPath(ctx.workspacePath, targetPath ?? './');
 
         await fetchContents({
           reader,
