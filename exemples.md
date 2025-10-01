@@ -75,126 +75,6 @@ steps:
 ```
 
 
-## debug:fs:read:plus
-
-### Debug read files in log stream
-
-```yaml
-steps:
-  - action: debug:fs:read:plus
-    id: debug-fs-read
-    name: Read files
-    input:
-      files:
-        - ./catalog-info.yaml
-        - some-file.txt
-      useMainLogger: true
-
-```
-
-
-## glob:plus
-
-### Find files from Glob expressions
-
-```yaml
-steps:
-  - action: glob:plus
-    id: glob
-    name: List files
-    input:
-      patterns:
-        - "**/*.y[a?]ml"
-
-```
-
-
-## parse:repo-url:plus
-
-### Parse Repo Url like "host?owner=any&organization=any&workspace=any&project=any"
-
-```yaml
-steps:
-  - action: parse:repo-url:plus
-    id: parse-repos-url
-    name: Parse Repos URLs
-    input:
-      reposUrls:
-        - host?owner=any&organization=any&workspace=any&project=any
-
-```
-
-
-## regex:fs:replace:plus
-
-### Replace in files using Regex and Glob
-
-```yaml
-steps:
-  - action: regex:fs:replace:plus
-    id: regex-fs-replace
-    name: Replace in files
-    input:
-      glob: "**/*.y[a?]ml"
-      pattern: a
-      replacement: b
-      flags: g
-
-```
-
-### Replace on xml keeping original indentarion useful to Yaml, Json and XML formats.
-
-```yaml
-steps:
-  - action: regex:fs:replace:plus
-    id: regex-fs-replace
-    name: Append spring-kafka
-    input:
-      pattern: ([\t ]+)</dependencies>
-      glob: pom.xml
-      replacement: |-
-        $1	<dependency>
-        $1		<!-- added from backstage -->
-        $1		<groupId>org.springframework.kafka</groupId>
-        $1		<artifactId>spring-kafka</artifactId>
-        $1	</dependency>
-        $1</dependencies>
-
-```
-
-
-## uuid:v4:gen:plus
-
-### Generate 3 UUID's
-
-```yaml
-steps:
-  - action: uuid:v4:gen:plus
-    id: uuid-v4-gen
-    name: UUID gen
-    input:
-      amount: 3
-
-```
-
-
-## vars:plus
-
-### Proxy vars to reuse on next actions
-
-```yaml
-steps:
-  - action: vars:plus
-    id: reusable-vars
-    name: Proxy vars
-    input:
-      vars:
-        foo: my-prefixed-${{ parameters.name | lower }}-foo
-        bar: bar-${{ parameters.value | lower }}
-
-```
-
-
 ## fetch:plain:plus
 
 ### Downloads content and places it in the workspace.
@@ -318,6 +198,126 @@ steps:
           overwrite: false
         - from: file3.txt
           to: file3Renamed.txt
+
+```
+
+
+## debug:fs:read:plus
+
+### Debug read files in log stream
+
+```yaml
+steps:
+  - action: debug:fs:read:plus
+    id: debug-fs-read
+    name: Read files
+    input:
+      files:
+        - ./catalog-info.yaml
+        - some-file.txt
+      useMainLogger: true
+
+```
+
+
+## glob:plus
+
+### Find files from Glob expressions
+
+```yaml
+steps:
+  - action: glob:plus
+    id: glob
+    name: List files
+    input:
+      patterns:
+        - "**/*.y[a?]ml"
+
+```
+
+
+## parse:repo-url:plus
+
+### Parse Repo Url like "host?owner=any&organization=any&workspace=any&project=any"
+
+```yaml
+steps:
+  - action: parse:repo-url:plus
+    id: parse-repos-url
+    name: Parse Repos URLs
+    input:
+      reposUrls:
+        - host?owner=any&organization=any&workspace=any&project=any
+
+```
+
+
+## regex:fs:replace:plus
+
+### Replace in files using Regex and Glob
+
+```yaml
+steps:
+  - action: regex:fs:replace:plus
+    id: regex-fs-replace
+    name: Replace in files
+    input:
+      glob: "**/*.y[a?]ml"
+      pattern: a
+      replacement: b
+      flags: g
+
+```
+
+### Replace on xml keeping original indentarion useful to Yaml, Json and XML formats.
+
+```yaml
+steps:
+  - action: regex:fs:replace:plus
+    id: regex-fs-replace
+    name: Append spring-kafka
+    input:
+      pattern: ([\t ]+)</dependencies>
+      glob: pom.xml
+      replacement: |-
+        $1	<dependency>
+        $1		<!-- added from backstage -->
+        $1		<groupId>org.springframework.kafka</groupId>
+        $1		<artifactId>spring-kafka</artifactId>
+        $1	</dependency>
+        $1</dependencies>
+
+```
+
+
+## uuid:v4:gen:plus
+
+### Generate 3 UUID's
+
+```yaml
+steps:
+  - action: uuid:v4:gen:plus
+    id: uuid-v4-gen
+    name: UUID gen
+    input:
+      amount: 3
+
+```
+
+
+## vars:plus
+
+### Proxy vars to reuse on next actions
+
+```yaml
+steps:
+  - action: vars:plus
+    id: reusable-vars
+    name: Proxy vars
+    input:
+      vars:
+        foo: my-prefixed-${{ parameters.name | lower }}-foo
+        bar: bar-${{ parameters.value | lower }}
 
 ```
 
