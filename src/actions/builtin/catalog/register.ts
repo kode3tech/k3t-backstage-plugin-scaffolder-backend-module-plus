@@ -84,8 +84,6 @@ export function createCatalogRegisterPlusAction(options: {
         
         logger.info(`Registering from '${catalogInfoUrl}'...`)
         
-        logger.info(`WARNING: This function is not implemented yet!`);
-
         const result: OutputFields = {}
 
         await __.handler({ 
