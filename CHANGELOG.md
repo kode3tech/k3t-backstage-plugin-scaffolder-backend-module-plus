@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/compare/v1.5.38...v1.6.0) (2025-10-01)
+
+
+### Features
+
+* add skipIf option to FieldsType and update createFetchTemplatePlusAction logic ([957a49d](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/commit/957a49de78e0b760a9d15e92c855c9892d25c7ca))
+
 ### [1.5.38](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/compare/v1.5.37...v1.5.38) (2025-09-30)
 
 ### [1.5.37](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/compare/v1.5.36...v1.5.37) (2025-09-24)
