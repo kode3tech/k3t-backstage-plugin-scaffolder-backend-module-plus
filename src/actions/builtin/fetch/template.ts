@@ -15,7 +15,8 @@ export type FieldsType = {
   copyWithoutTemplating: string[]
   cookiecutterCompat: boolean
   templateFileExtension: string | boolean
-  replace: boolean
+  replace: boolean,
+  skipIf: boolean
 }
 
 export const FieldsSchema = {
@@ -59,6 +60,9 @@ export const FieldsSchema = {
     description: 'Not throw error',
     message: 'If set, errors during process will be ignored.'
   }).optional(),
+  skipIf: z.boolean({
+    description: 'Skip item process when value is true'
+  }).optional(),
 };
 
 export const InputSchema = {
@@ -101,7 +105,9 @@ export function createFetchTemplatePlusAction(options: {
       
       const results = [];
 
-      for (const params of templates) {
+      for (let p = 0; p < templates.length; p++) {
+        const params = templates[p];
+        
         const values = {
           ...{...(commonParams?.values ?? {}), ...(params?.values ?? {})}
         };
@@ -113,6 +119,11 @@ export function createFetchTemplatePlusAction(options: {
           targetPath
         };
         
+        if(input.skipIf){
+          ctx.logger.warn(`Template item '${p}' skiped by 'skipIf'!`);
+          continue;
+        }
+
         ctx.logger.info(JSON.stringify(values));
 
         const { url }  = input;
