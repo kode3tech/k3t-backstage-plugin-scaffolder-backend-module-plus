@@ -10,7 +10,11 @@ export type FieldsType = { catalogInfoUrl: string; optional?: boolean }
 
 export const FieldsSchema = {
   catalogInfoUrl: z.string({description: 'Catalog Info URL', message: 'An absolute URL pointing to the catalog info file location'}).optional(),
-  optional: z.boolean({description: 'Optional', message: 'Permit the registered location to optionally exist. Default: false'}).optional()
+  optional: z.boolean({description: 'Optional', message: 'Permit the registered location to optionally exist. Default: false'}).optional(),
+  skipIf: z.boolean({
+    description: 'Skip item process when value is true'
+  }).optional(),
+
 };
 
 export const InputSchema = {
@@ -81,7 +85,12 @@ export function createCatalogRegisterPlusAction(options: {
           ...{...(commonParams ?? {}), ...source}
         }
         const { catalogInfoUrl } = input; 
-        
+
+        if(input.skipIf){
+          ctx.logger.warn(`Template item '${source.catalogInfoUrl}' skiped by 'skipIf'!`);
+          continue;
+        }
+
         logger.info(`Registering from '${catalogInfoUrl}'...`)
         
         const result: OutputFields = {}
