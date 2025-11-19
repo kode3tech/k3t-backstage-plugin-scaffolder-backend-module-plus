@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/compare/v1.6.1...v1.7.0) (2025-11-19)
+
+
+### Features
+
+* add skipIf option to FieldsSchema for conditional processing ([c404e3c](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/commit/c404e3c03ca85ad48568d2b56fa76abdffc7cba8))
+
 ### [1.6.1](https://github.com/kode3tech/k3t-backstage-plugin-scaffolder-backend-module-plus/compare/v1.6.0...v1.6.1) (2025-10-01)
 
 
