@@ -9,5 +9,6 @@
     "rootDir": ".",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-  }
+    "types": ["node", "jest"]
+  },
 }
