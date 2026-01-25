@@ -177,6 +177,26 @@ steps:
 ```
 
 
+## rename:paths
+
+### Rename files matching a glob pattern using regex
+
+```yaml
+steps:
+  - action: rename:paths
+    id: renamepaths
+    name: Rename paths
+    input:
+      commonParams:
+        glob: "**/*.txt"
+        overwrite: true
+      paths:
+        - pattern: file(\d+)\.txt
+          replacement: file$1Renamed.txt
+
+```
+
+
 ## fs:rename:plus
 
 ### Rename specified files 
