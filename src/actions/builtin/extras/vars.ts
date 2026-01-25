@@ -20,14 +20,14 @@ export function createVarsAction() {
 
   return createTemplateAction({
     id: VARS,
-    description: 'Proxy template varriables/expressions',
+    description: 'Proxy template variables/expressions',
     examples,
     schema: {
       input: {
         vars: (d) => d.any({description: 'Any vars.'}),
       },
       output: {
-        result: (d) => d.object({})
+        result: (d) => d.any({description: 'Parsed same input vars.'}),
       }
     },
 

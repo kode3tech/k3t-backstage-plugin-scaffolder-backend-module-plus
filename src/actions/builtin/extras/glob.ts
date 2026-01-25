@@ -1,12 +1,10 @@
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import { JsonObject } from '@backstage/types';
-import { Schema } from 'jsonschema';
-import { GLOB } from './ids';
-import { examples } from "./parse-repo-url.examples";
 import globby from 'globby';
 import z from 'zod';
 import { InputFieldsSchema } from './glob.types';
+import { GLOB } from './ids';
+import { examples } from "./glob.examples";
 
 export function createGlobAction() {
 
@@ -15,9 +13,9 @@ export function createGlobAction() {
     description: 'Read file(s) and display',
     examples,
     schema: {
-      input: (_)  =>  InputFieldsSchema(_),
+      input: (_) => InputFieldsSchema(_),
       output: {
-        results: (_) => z.array(z.string())
+        results: (_) => _.array(_.string({description: 'A file path found by the glob pattern'}), { description: 'List of files found by glob pattern' }),
       },
     },
 

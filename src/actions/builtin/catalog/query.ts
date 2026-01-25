@@ -1,50 +1,8 @@
-import { CatalogApi, EntityFilterQuery, EntityOrderQuery } from '@backstage/catalog-client';
+import { CatalogApi } from '@backstage/catalog-client';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { CATALOG_QUERY_ID } from './ids';
-import { Schema } from 'jsonschema';
-import { Entity } from '@backstage/catalog-model';
-import { JsonObject } from '@backstage/types';
 import { examples } from "./query.examples";
-import z from 'zod';
-
-export type FieldsType = {
-  fields?: string[];
-  limit?: number;
-  filter?: EntityFilterQuery;
-  orderFields?: EntityOrderQuery;
-  fullTextFilter?: {
-      term: string;
-      fields?: string[];
-  };
-} & JsonObject;
-
-export const FieldsSchema = {
-  fields: z.array(z.string()).optional(),
-  limit: z.number({description: 'Limit the number of results returned.'}).optional(),
-  filter: z.any().optional(),
-  orderFields: z.object({
-    field: z.string(),
-    order: z.enum(['asc', 'desc'])
-  }).optional(),
-  fullTextFilter: z.object({
-      term: z.string(),
-      fields: z.array(z.string()),
-  }).optional(),
-}
-export const InputSchema = {
-  commonParams: z.object(FieldsSchema).optional(),
-  queries: z.array(z.object(FieldsSchema))
-}
-
-export type InputType = {
-  commonParams?: z.infer<typeof InputSchema.commonParams>,
-  queries: z.infer<typeof InputSchema.queries>
-}
-
-export const OutputSchema ={
-  results: z.array(z.array(z.any())),
-}
-
+import { InputFieldsSchema, OutputSchema } from './query.types';
 
 
 export function createCatalogQueryAction(options: { 
@@ -59,11 +17,11 @@ export function createCatalogQueryAction(options: {
     examples,
     schema: {
       input: {
-        commonParams: (_) => InputSchema.commonParams,
-        queries: (_) => InputSchema.queries,
+        commonParams: (d) => InputFieldsSchema(d).partial().optional(),
+        queries: (d) => d.array(InputFieldsSchema(d)),
       },
       output: {
-        results: (_) => OutputSchema.results
+        results: (d) => OutputSchema.results(d)
       },
     },
 

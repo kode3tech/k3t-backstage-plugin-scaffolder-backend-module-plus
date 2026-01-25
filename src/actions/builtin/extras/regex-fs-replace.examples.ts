@@ -1,8 +1,8 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { FieldsType } from "./regex-fs-replace";
 import { REGEX_FS_REPLACE } from './ids';
+import { FieldsType } from "./regex-fs-replace.types";
 
 export const examples: TemplateExample[] = [
   {

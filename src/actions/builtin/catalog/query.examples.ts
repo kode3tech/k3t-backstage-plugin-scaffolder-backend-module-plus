@@ -1,8 +1,8 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from "./query";
 import { CATALOG_QUERY_ID } from './ids';
+import { FieldsType } from './query.types';
 
 export const examples: TemplateExample[] = [
   {
@@ -26,7 +26,7 @@ export const examples: TemplateExample[] = [
                 }
               }
             ]
-          } as InputType,
+          } as FieldsType,
         },
       ],
     }),
