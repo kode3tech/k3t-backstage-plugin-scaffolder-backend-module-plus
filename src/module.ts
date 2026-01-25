@@ -15,6 +15,7 @@ import {
   createGlobAction,
   createParseRepoUrlAction,
   createRegexFsReplaceAction,
+  createRenamePathsAction,
   createUuidV4GenAction,
   createVarsAction
 } from './actions/builtin';
@@ -57,6 +58,7 @@ export const scaffolderCatalogModule = createBackendModule({
           createFetchPlainFilePlusAction({integrations, reader}),
           createFetchTemplatePlusAction({integrations, reader}),
           createFilesystemRenamePlusAction(),
+          createRenamePathsAction(),
           createParseRepoUrlAction({integrations}),
           createRegexFsReplaceAction(),
         );

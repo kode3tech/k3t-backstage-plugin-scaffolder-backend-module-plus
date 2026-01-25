@@ -15,3 +15,4 @@
  */
 
 export * from './rename';
+export * from './rename-paths';
