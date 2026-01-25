@@ -177,6 +177,51 @@ steps:
 ```
 
 
+## rename:paths
+
+### Rename files matching a glob pattern using regex
+
+```yaml
+steps:
+  - action: rename:paths
+    id: renamepaths
+    name: Rename paths
+    input:
+      commonParams:
+        glob: "**/*.txt"
+        overwrite: true
+      paths:
+        - pattern: file(\d+)\.txt
+          replacement: file$1Renamed.txt
+
+```
+
+
+## fs:rename:plus
+
+### Rename specified files 
+
+```yaml
+steps:
+  - action: fs:rename:plus
+    id: renameFiles
+    name: Rename files
+    input:
+      commonParams:
+        overwrite: true
+      files:
+        - from: file1.txt
+          to: file1Renamed.txt
+          overwrite: false
+        - from: file2.txt
+          to: file2Renamed.txt
+          overwrite: false
+        - from: file3.txt
+          to: file3Renamed.txt
+
+```
+
+
 ## debug:fs:read:plus
 
 ### Debug read files in log stream
@@ -293,51 +338,6 @@ steps:
       vars:
         foo: my-prefixed-${{ parameters.name | lower }}-foo
         bar: bar-${{ parameters.value | lower }}
-
-```
-
-
-## rename:paths
-
-### Rename files matching a glob pattern using regex
-
-```yaml
-steps:
-  - action: rename:paths
-    id: renamepaths
-    name: Rename paths
-    input:
-      commonParams:
-        glob: "**/*.txt"
-        overwrite: true
-      paths:
-        - pattern: file(\d+)\.txt
-          replacement: file$1Renamed.txt
-
-```
-
-
-## fs:rename:plus
-
-### Rename specified files 
-
-```yaml
-steps:
-  - action: fs:rename:plus
-    id: renameFiles
-    name: Rename files
-    input:
-      commonParams:
-        overwrite: true
-      files:
-        - from: file1.txt
-          to: file1Renamed.txt
-          overwrite: false
-        - from: file2.txt
-          to: file2Renamed.txt
-          overwrite: false
-        - from: file3.txt
-          to: file3Renamed.txt
 
 ```
 
