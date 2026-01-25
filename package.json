@@ -39,17 +39,16 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/backend-defaults": "0.12.1",
-    "@backstage/backend-plugin-api": "1.4.3",
-    "@backstage/plugin-scaffolder-backend": "2.2.1",
-    "@backstage/plugin-scaffolder-node": "0.11.1",
-    "@backstage/plugin-catalog-node": "1.19.0",
-    "decompress": "^4.2.1"
+    "@backstage/backend-defaults": "^0.11.1",
+    "@backstage/backend-plugin-api": "^1.5.0",
+    "@backstage/plugin-catalog-node": "^1.17.2",
+    "@backstage/plugin-scaffolder-backend": "^2.1.0",
+    "@backstage/plugin-scaffolder-node": "^0.10.0"
   },
   "devDependencies": {
     "@backstage/plugin-scaffolder-node-test-utils": "^0.2.2",
     "@backstage/backend-test-utils": "^1.5.0",
-    "@backstage/cli": "^0.32.1",
+    "@backstage/cli": "^0.35.2",
     "@backstage/test-utils": "^1.7.8",
     "@types/decompress": "^4.2.4",
     "@types/fs-extra": "11.0.4",

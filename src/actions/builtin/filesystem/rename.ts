@@ -16,35 +16,12 @@
 
 import { createFilesystemRenameAction } from '@backstage/plugin-scaffolder-backend';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import { z } from "zod";
 import { examples } from './rename.examples';
 import { InputError } from '@backstage/errors';
 import { FS_RENAME_PLURI_ID } from './ids';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
-
-export const FieldsSchema = z.object({
-  from: z.string({ 
-    description: 'The source location of the file to be renamed'
-  }),
-  to: z.string({ 
-    description: 'The destination of the new file'
-  }),
-  overwrite:  z.optional(z.boolean({ 
-    description: 'Overwrite existing file or directory, default is false'
-  })),
-})
-
-
-export const InputSchema = z.object({
-  commonParams: z.optional(FieldsSchema),
-  files: z.array(FieldsSchema)
-})
-
-export const OutputSchema = z.object({
-  results: z.array(z.any())
-})
-
+import { FieldsSchema } from './rename.types';
 
 /**
  * Creates a new action that allows renames of files and directories in the workspace.
@@ -60,8 +37,8 @@ export const createFilesystemRenamePlusAction = () => {
     examples,
     schema: {
       input: {
-        commonParams: (d) => d.object(FieldsSchema.shape).optional(),
-        files: (d) => d.array(d.object(FieldsSchema.shape))
+        commonParams: (d) => FieldsSchema(d).partial().optional(),
+        files: (d) => d.array(FieldsSchema(d)),
       },
       output: {
         results: (d) => d.array(d.object({}))

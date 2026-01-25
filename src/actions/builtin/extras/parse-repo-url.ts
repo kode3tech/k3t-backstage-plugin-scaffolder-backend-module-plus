@@ -6,24 +6,10 @@ import { Schema } from 'jsonschema';
 import { PARSE_REPO_URL } from './ids';
 import { examples } from "./parse-repo-url.examples";
 import z from 'zod';
-
-export const InputSchema = z.object({
-  reposUrls: z.array(z.string({description: 'host?owner=any&organization=any&workspace=any&project=any'})),
-});
+import { InputFieldsSchema, OutputSchema } from './parse-repo-url.types';
 
 
-export const OutputSchema = z.object({
-  repo: z.string(),
-  host: z.string(),
-  owner: z.string().optional(),
-  organization: z.string().optional(),
-  workspace: z.string().optional(),
-  project: z.string().optional(),
-})
-
-
-
-export type RepoSpec = z.infer<typeof OutputSchema>;
+// export type RepoSpec = z.infer<typeof OutputSchema>;
 
 /**
  *  
@@ -34,7 +20,7 @@ export type RepoSpec = z.infer<typeof OutputSchema>;
 export const parseRepoUrl = (
   repoUrl: string,
   integrations: ScmIntegrationRegistry,
-): RepoSpec => {
+): z.infer<ReturnType<typeof OutputSchema>> => {
   let parsed;
   try {
     parsed = new URL(`https://${repoUrl}`);
@@ -100,12 +86,8 @@ export function createParseRepoUrlAction(options: {
       'Parse Repo url like "host?owner=any&organization=any&workspace=any&project=any"',
     examples,
     schema: {
-      input: {
-        reposUrls: (d) => d.array(d.string({description: 'host?owner=any&organization=any&workspace=any&project=any'})),
-      },
-      output: {
-        results: (d) => d.array(OutputSchema)
-      },
+      input: (_) => InputFieldsSchema(_),
+      output: (_) => _.object({results: _.array(OutputSchema(_))}),
     },
 
     async handler(ctx) {

@@ -16,8 +16,15 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import * as yaml from 'yaml';
-import { InputSchema } from './rename';
 import { FS_RENAME_PLURI_ID } from './ids';
+import z from 'zod';
+import { FieldsSchema } from './rename.types';
+
+const FieldsInstance = FieldsSchema(z);
+const FieldsArrayInstance = z.array(FieldsSchema(z));
+
+type FieldsType = z.infer<typeof FieldsInstance>;
+type FieldsArrayType = z.infer<typeof FieldsArrayInstance>;
 
 export const examples: TemplateExample[] = [
   {
@@ -31,13 +38,13 @@ export const examples: TemplateExample[] = [
           input: {
             commonParams: {
               overwrite: true
-            },
+            } as Partial<FieldsType>,
             files: [
               { from: 'file1.txt', to: 'file1Renamed.txt', overwrite: false },
               { from: 'file2.txt', to: 'file2Renamed.txt', overwrite: false },
               { from: 'file3.txt', to: 'file3Renamed.txt' },
-            ],
-          } as typeof InputSchema._type,
+            ] as FieldsArrayType,
+          },
         } ,
       ],
     }),

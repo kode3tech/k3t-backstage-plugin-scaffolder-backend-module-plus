@@ -1,8 +1,13 @@
 
 import { TemplateExample } from '@backstage/plugin-scaffolder-node';
 import yaml from 'yaml';
-import { InputType } from "./glob";
 import { GLOB } from './ids';
+import z from 'zod';
+import { InputFieldsSchema } from './glob.types';
+
+const InputInstance = InputFieldsSchema(z);
+
+type InputType = z.infer<typeof InputInstance>;
 
 export const examples: TemplateExample[] = [
   {
