@@ -23,7 +23,7 @@ export const resolvers: Record<ContentType, fnContentResolver> = {
 
     await fetchFile({
       reader,
-      integrations: integrations as any,
+      integrations,
       baseUrl: templateInfo?.baseUrl ?? workspacePath,
       fetchUrl: content,
       outputPath: tmpFetchFile,

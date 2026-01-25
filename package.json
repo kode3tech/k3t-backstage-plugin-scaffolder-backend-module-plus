@@ -41,6 +41,7 @@
   "dependencies": {
     "@backstage/backend-defaults": "^0.11.1",
     "@backstage/backend-plugin-api": "^1.5.0",
+    "@backstage/integration": "^1.18.0",
     "@backstage/plugin-catalog-node": "^1.17.2",
     "@backstage/plugin-scaffolder-backend": "^2.1.0",
     "@backstage/plugin-scaffolder-node": "^0.10.0"
