@@ -17,8 +17,9 @@
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import { InputError } from '@backstage/errors';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import { renameSync } from 'fs';
-import * as globby from 'globby';
+import { mkdirSync, renameSync } from 'fs';
+import globby from 'globby';
+import { dirname } from 'path';
 import { RENAME_PATHS_ID } from './ids';
 import { examples } from './rename-paths.examples';
 import { FieldsSchema } from './rename-paths.types';
@@ -79,21 +80,23 @@ export const createRenamePathsAction = () => {
         }
         const regExp = new RegExp(parsed[1], parsed[2]);
 
-        let founded = globby.sync(glob, { cwd: ctx.workspacePath, dot: true });
-        while (founded.length != 0) {
-          const filePath = founded.pop() as string;
+        const founded = globby.sync(glob, { cwd: ctx.workspacePath })
+        
+        for (const filePath of founded) {
           const sourceFilepath = resolveSafeChildPath(ctx.workspacePath,filePath);
-
+          
           regExp.lastIndex = 0; // Reset lastIndex in case of global regex
           if (!regExp.test(filePath)) continue;
 
           const destFilepath = resolveSafeChildPath(ctx.workspacePath, filePath.replace(regExp, replacement));
-
+          
+          
           try {
-            
+            const destDir = dirname(destFilepath);
+
             if(!ctx.isDryRun) {
-              // const destDir = dirname(destFilepath);
-              // mkdirSync(destDir, { recursive: true });
+              // rmSync(destFilepath, { recursive: false, force: overwrite ?? false });
+              mkdirSync(destDir, { recursive: true });
               renameSync(sourceFilepath, destFilepath);
 
               ctx.logger.info(
@@ -109,7 +112,6 @@ export const createRenamePathsAction = () => {
               err,
             );
           }
-          founded = globby.sync(glob, { cwd: ctx.workspacePath, dot: true });
         }
         pathsResults.push(results);
       }
