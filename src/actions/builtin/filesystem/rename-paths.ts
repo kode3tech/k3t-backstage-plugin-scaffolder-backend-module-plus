@@ -19,7 +19,7 @@ import { InputError } from '@backstage/errors';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { mkdirSync, renameSync } from 'fs';
 import globby from 'globby';
-import { dirname } from 'path';
+import path from 'path';
 import { RENAME_PATHS_ID } from './ids';
 import { examples } from './rename-paths.examples';
 import { FieldsSchema } from './rename-paths.types';
@@ -80,32 +80,22 @@ export const createRenamePathsAction = () => {
         }
         const regExp = new RegExp(parsed[1], parsed[2]);
 
-        const founded = globby.sync(glob, { cwd: ctx.workspacePath })
-        
-        for (const filePath of founded) {
-          const sourceFilepath = resolveSafeChildPath(ctx.workspacePath,filePath);
-          
+        let founded = globby.sync(glob, { cwd: ctx.workspacePath, onlyDirectories: true })
+        for (const currentPath of founded) {
           regExp.lastIndex = 0; // Reset lastIndex in case of global regex
-          if (!regExp.test(filePath)) continue;
+          if (!regExp.test(currentPath)) continue;
+          
+          const sourceFilepath = resolveSafeChildPath(ctx.workspacePath,currentPath);
+          const destFilepath = resolveSafeChildPath(ctx.workspacePath, currentPath.replace(regExp, replacement));
 
-          const destFilepath = resolveSafeChildPath(ctx.workspacePath, filePath.replace(regExp, replacement));
-          
-          
           try {
-            const destDir = dirname(destFilepath);
-
             if(!ctx.isDryRun) {
-              // rmSync(destFilepath, { recursive: false, force: overwrite ?? false });
-              mkdirSync(destDir, { recursive: true });
               renameSync(sourceFilepath, destFilepath);
-
               ctx.logger.info(
                 `File ${sourceFilepath} renamed to ${destFilepath} successfully`,
               );
             }
-
             results.push({ from: sourceFilepath, to: destFilepath, status: 'renamed' });
-
           } catch (err: any) {
             ctx.logger.error(
               `Failed to rename file ${sourceFilepath} to ${destFilepath}:`,
@@ -113,6 +103,34 @@ export const createRenamePathsAction = () => {
             );
           }
         }
+        
+        founded = globby.sync(glob, { cwd: ctx.workspacePath, onlyFiles: true })
+          
+        for (const currentPath of founded) {
+          regExp.lastIndex = 0; // Reset lastIndex in case of global regex
+          if (!regExp.test(currentPath)) continue;
+          
+          const sourceFilepath = resolveSafeChildPath(ctx.workspacePath,currentPath);
+          const destFilepath = resolveSafeChildPath(ctx.workspacePath, currentPath.replace(regExp, replacement));
+
+          try {
+            if(!ctx.isDryRun) {
+              renameSync(sourceFilepath, destFilepath);
+              ctx.logger.info(
+                `File ${sourceFilepath} renamed to ${destFilepath} successfully`,
+              );
+            }
+            results.push({ from: sourceFilepath, to: destFilepath, status: 'renamed' });
+          } catch (err: any) {
+            ctx.logger.error(
+              `Failed to rename file ${sourceFilepath} to ${destFilepath}:`,
+              err,
+            );
+          }
+        }
+
+
+
         pathsResults.push(results);
       }
 
