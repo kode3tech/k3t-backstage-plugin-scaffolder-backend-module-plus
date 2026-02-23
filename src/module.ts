@@ -31,7 +31,7 @@ import { catalogServiceRef } from '@backstage/plugin-catalog-node';
  * A backend module that registers the action into the scaffolder
  */
 export const scaffolderCatalogModule = createBackendModule({
-  moduleId: 'k3tech.scaffolder-actions-plus',
+  moduleId: 'k3tech-scaffolder-actions-plus',
   pluginId: 'scaffolder',
   register({ registerInit }) {
     registerInit({
